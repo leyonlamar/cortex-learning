@@ -1,0 +1,96 @@
+/* ── Warm Study Hall Theme ───────────────────────────────────────────────
+   Palette: linen #f5f0e8, sage #7c956b, terracotta #c4785e, warm gold #d4a04a
+   Fonts: Fraunces (display), Nunito (body), JetBrains Mono (code)
+   Details: generous 12px border-radius, larger icons, pill-shaped buttons,
+            dotted dividers, time-of-day greeting, backdrop-filter blur on modals
+──────────────────────────────────────────────────────────────────────── */
+
+[data-theme="studyhall"] {
+  /* Background */
+  --bg-primary: #f5f0e8;
+  --bg-secondary: #ede7db;
+  --bg-tertiary: #e3dace;
+  --bg-surface: #faf6ef;
+
+  /* Text */
+  --text-primary: #2d2a26;
+  --text-secondary: #5a5550;
+  --text-muted: #8a847c;
+  --text-inverse: #f5f0e8;
+
+  /* Accent */
+  --accent-primary: #7c956b;
+  --accent-secondary: #c4785e;
+  --accent-success: #7c956b;
+  --accent-warning: #d4a04a;
+  --accent-danger: #c4785e;
+  --accent-info: #6b8fa3;
+
+  /* Borders */
+  --border-color: #d4cfc4;
+  --border-radius: 12px;
+  --border-style: solid;
+
+  /* Typography */
+  --font-display: 'Bricolage Grotesque', system-ui, sans-serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+  --font-code: 'JetBrains Mono', 'Courier New', monospace;
+
+  /* Shadows — soft warm */
+  --shadow-sm: 0 1px 3px rgba(45, 42, 38, 0.06);
+  --shadow-md: 0 4px 8px rgba(45, 42, 38, 0.08);
+  --shadow-lg: 0 8px 24px rgba(45, 42, 38, 0.1);
+
+  /* Chart Colors */
+  --chart-1: #7c956b;
+  --chart-2: #c4785e;
+  --chart-3: #d4a04a;
+  --chart-4: #6b8fa3;
+  --chart-5: #9b7db8;
+  --chart-6: #c47c9b;
+
+  /* Interactive */
+  --hover-opacity: 0.9;
+  --focus-ring: 0 0 0 3px rgba(124, 149, 107, 0.4);
+}
+
+/* ── Dotted dividers ─────────────────────────────────────────────────── */
+
+[data-theme="studyhall"] hr {
+  border: none;
+  border-top: 2px dotted var(--border-color);
+  margin: 1.5rem 0;
+}
+
+/* ── Pill-shaped buttons ─────────────────────────────────────────────── */
+
+[data-theme="studyhall"] button,
+[data-theme="studyhall"] [role="button"] {
+  border-radius: 9999px;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+/* ── Larger icons ────────────────────────────────────────────────────── */
+
+[data-theme="studyhall"] svg {
+  width: 1.25em;
+  height: 1.25em;
+}
+
+/* ── Backdrop blur on modals & overlays ──────────────────────────────── */
+
+[data-theme="studyhall"] [data-modal-backdrop],
+[data-theme="studyhall"] .modal-backdrop {
+  backdrop-filter: blur(8px);
+  background: rgba(45, 42, 38, 0.3);
+}
+
+/* ── Warm card styling ───────────────────────────────────────────────── */
+
+[data-theme="studyhall"] [data-card],
+[data-theme="studyhall"] .card {
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-surface);
+}

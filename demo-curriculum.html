@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Learning OS 2026 — Curriculum Demo</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #000000; --surface: #0D0D0D; --border: #1E1E1E;
+    --text: #E0E0E0; --text-secondary: #999; --text-muted: #555;
+    --accent: #00FF88; --accent-dim: rgba(0,255,136,0.12);
+    --danger: #FF4444; --warning: #FFB800; --info: #00BFFF;
+  }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* Layout */
+  .app { display: flex; height: 100vh; overflow: hidden; }
+  .sidebar { width: 280px; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; }
+  .main { flex: 1; overflow-y: auto; padding: 32px; }
+
+  /* Sidebar */
+  .logo { padding: 20px; border-bottom: 1px solid var(--border); }
+  .logo h1 { font-size: 16px; color: var(--accent); font-family: 'JetBrains Mono', 'Consolas', monospace; text-shadow: 0 0 8px rgba(0,255,136,0.3); }
+  .logo p { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+  .nav { padding: 12px; flex: 1; }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 6px; cursor: pointer; transition: all 0.2s; font-size: 13px; color: var(--text-secondary); }
+  .nav-item:hover { background: var(--accent-dim); color: var(--text); }
+  .nav-item.active { background: var(--accent-dim); color: var(--accent); font-weight: 600; }
+  .nav-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .nav-count { margin-left: auto; font-size: 11px; color: var(--text-muted); font-family: monospace; }
+
+  .stats-bar { padding: 16px; border-top: 1px solid var(--border); }
+  .stat-row { display: flex; justify-content: space-between; font-size: 12px; padding: 4px 0; }
+  .stat-label { color: var(--text-muted); }
+  .stat-value { color: var(--accent); font-family: monospace; }
+
+  /* Main Content */
+  .view-title { font-size: 24px; font-weight: 700; margin-bottom: 4px; font-family: 'JetBrains Mono', monospace; }
+  .view-subtitle { font-size: 13px; color: var(--text-muted); margin-bottom: 24px; }
+
+  /* Domain Grid */
+  .domain-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; margin-bottom: 32px; }
+  .domain-card { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; cursor: pointer; transition: all 0.2s; }
+  .domain-card:hover { border-color: var(--accent); box-shadow: 0 0 12px rgba(0,255,136,0.08); }
+  .domain-card.active { border-color: var(--accent); }
+  .domain-header { padding: 16px; display: flex; align-items: center; gap: 12px; }
+  .domain-icon { width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+  .domain-info h3 { font-size: 14px; font-weight: 600; }
+  .domain-info p { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+  .domain-topics { padding: 0 16px 16px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .topic-pill { font-size: 11px; padding: 3px 8px; border-radius: 12px; background: rgba(255,255,255,0.05); color: var(--text-secondary); border: 1px solid var(--border); cursor: pointer; transition: all 0.15s; }
+  .topic-pill:hover { background: var(--accent-dim); color: var(--accent); border-color: var(--accent); }
+  .topic-pill.selected { background: var(--accent-dim); color: var(--accent); border-color: var(--accent); }
+
+  /* Quiz Section */
+  .quiz-container { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; max-width: 720px; }
+  .quiz-header { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .quiz-header h2 { font-size: 16px; }
+  .quiz-meta { display: flex; gap: 16px; }
+  .quiz-badge { font-size: 11px; padding: 3px 10px; border-radius: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+  .badge-recall { background: rgba(0,191,255,0.15); color: var(--info); }
+  .badge-applied { background: rgba(255,184,0,0.15); color: var(--warning); }
+  .badge-synthesis { background: rgba(191,90,242,0.15); color: #BF5AF2; }
+  .badge-checkpoint { background: rgba(0,255,136,0.15); color: var(--accent); }
+
+  .quiz-body { padding: 24px; }
+  .question-counter { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; font-family: monospace; }
+  .question-text { font-size: 15px; line-height: 1.6; margin-bottom: 20px; }
+  .difficulty-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; font-size: 11px; color: var(--text-muted); }
+  .diff-track { width: 80px; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+  .diff-fill { height: 100%; border-radius: 2px; transition: width 0.3s; }
+
+  .options { display: flex; flex-direction: column; gap: 8px; }
+  .option-btn { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; transition: all 0.15s; text-align: left; color: var(--text); font-size: 13px; line-height: 1.5; }
+  .option-btn:hover { border-color: var(--accent); background: var(--accent-dim); }
+  .option-btn.selected { border-color: var(--accent); background: var(--accent-dim); }
+  .option-btn.correct { border-color: var(--accent); background: rgba(0,255,136,0.15); }
+  .option-btn.wrong { border-color: var(--danger); background: rgba(255,68,68,0.15); }
+  .option-letter { width: 24px; height: 24px; border-radius: 4px; background: var(--border); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; font-family: monospace; flex-shrink: 0; }
+  .option-btn.correct .option-letter { background: var(--accent); color: #000; }
+  .option-btn.wrong .option-letter { background: var(--danger); color: #000; }
+
+  .quiz-footer { padding: 16px 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+  .btn { padding: 8px 20px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; font-size: 13px; transition: all 0.15s; }
+  .btn:hover { border-color: var(--accent); }
+  .btn-primary { background: var(--accent); color: #000; border-color: var(--accent); font-weight: 600; }
+  .btn-primary:hover { box-shadow: 0 0 12px rgba(0,255,136,0.3); }
+  .btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  /* Progress */
+  .progress-bar { width: 100%; height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; margin-bottom: 24px; }
+  .progress-fill { height: 100%; background: var(--accent); transition: width 0.3s; border-radius: 2px; }
+
+  /* Results */
+  .results { padding: 24px; }
+  .score-display { text-align: center; margin-bottom: 24px; }
+  .score-number { font-size: 48px; font-weight: 700; font-family: monospace; color: var(--accent); text-shadow: 0 0 20px rgba(0,255,136,0.3); }
+  .score-label { font-size: 13px; color: var(--text-muted); }
+  .breakdown { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px; }
+  .breakdown-item { text-align: center; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 6px; border: 1px solid var(--border); }
+  .breakdown-item .value { font-size: 20px; font-weight: 700; font-family: monospace; }
+  .breakdown-item .label { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+  /* Scan-line overlay */
+  .scanlines { position: fixed; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: 9999;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px); }
+
+  /* Section divider */
+  .section-divider { display: flex; align-items: center; gap: 12px; margin: 32px 0 16px; }
+  .section-divider span { font-size: 13px; color: var(--text-muted); font-family: monospace; white-space: nowrap; }
+  .section-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* Tabs */
+  .tabs { display: flex; gap: 2px; margin-bottom: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 3px; width: fit-content; }
+  .tab { padding: 6px 16px; border-radius: 4px; font-size: 12px; cursor: pointer; color: var(--text-secondary); transition: all 0.15s; }
+  .tab:hover { color: var(--text); }
+  .tab.active { background: var(--accent-dim); color: var(--accent); font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="scanlines"></div>
+<div class="app">
+  <div class="sidebar">
+    <div class="logo">
+      <h1>&gt; LEARNING_OS</h1>
+      <p>2026 Curriculum System</p>
+    </div>
+    <div class="nav" id="domainNav"></div>
+    <div class="stats-bar">
+      <div class="stat-row"><span class="stat-label">Domains</span><span class="stat-value">8</span></div>
+      <div class="stat-row"><span class="stat-label">Topics</span><span class="stat-value">48</span></div>
+      <div class="stat-row"><span class="stat-label">Questions</span><span class="stat-value" id="questionCount">0</span></div>
+      <div class="stat-row"><span class="stat-label">Checkpoints</span><span class="stat-value" id="checkpointCount">0</span></div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div id="overviewView">
+      <div class="view-title">Curriculum Overview</div>
+      <div class="view-subtitle">8 domains, 48 topics, 43 weeks — select a domain to explore</div>
+      <div class="domain-grid" id="domainGrid"></div>
+    </div>
+
+    <div id="quizView" style="display:none">
+      <div class="view-title" id="quizDomainTitle"></div>
+      <div class="view-subtitle" id="quizDomainSub"></div>
+
+      <div class="tabs" id="topicTabs"></div>
+
+      <div class="quiz-container">
+        <div class="quiz-header">
+          <h2 id="quizTopicName">Quiz</h2>
+          <div class="quiz-meta">
+            <span class="quiz-badge" id="qTypeBadge"></span>
+          </div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="quiz-body" id="quizBody"></div>
+        <div class="quiz-footer">
+          <span class="question-counter" id="qCounter"></span>
+          <div style="display:flex;gap:8px">
+            <button class="btn" id="btnPrev" onclick="prevQuestion()">Previous</button>
+            <button class="btn btn-primary" id="btnNext" onclick="nextQuestion()">Next</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="quiz-container" id="resultsPanel" style="display:none;margin-top:16px">
+        <div class="results">
+          <div class="score-display">
+            <div class="score-number" id="finalScore">0%</div>
+            <div class="score-label">Quiz Score</div>
+          </div>
+          <div class="breakdown">
+            <div class="breakdown-item"><div class="value" id="recallScore" style="color:var(--info)">-</div><div class="label">Recall</div></div>
+            <div class="breakdown-item"><div class="value" id="appliedScore" style="color:var(--warning)">-</div><div class="label">Applied</div></div>
+            <div class="breakdown-item"><div class="value" id="synthScore" style="color:#BF5AF2">-</div><div class="label">Synthesis</div></div>
+          </div>
+          <div style="text-align:center;margin-top:20px">
+            <button class="btn btn-primary" onclick="resetQuiz()">Try Another Domain</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════
+// CURRICULUM DATA — mirrors the Rust question bank
+// ═══════════════════════════════════════════════════════════════════════
+
+const DOMAINS = [
+  { slug: "data-science", name: "Data Science", color: "#6366f1", icon: "🧠", topics: [
+    { slug: "python-ds", name: "Python for Data Science" },
+    { slug: "statistics", name: "Statistical Analysis" },
+    { slug: "ml-fundamentals", name: "Machine Learning Fundamentals" },
+    { slug: "data-viz", name: "Data Visualization" },
+    { slug: "feature-engineering", name: "Feature Engineering" },
+    { slug: "model-eval", name: "Model Evaluation & Validation" },
+  ]},
+  { slug: "engineering", name: "Engineering", color: "#f59e0b", icon: "⚙️", topics: [
+    { slug: "design-patterns", name: "Software Design Patterns" },
+    { slug: "api-design", name: "API Design & REST" },
+    { slug: "version-control", name: "Version Control & Git" },
+    { slug: "cicd", name: "CI/CD Pipelines" },
+    { slug: "code-quality", name: "Code Quality & Testing" },
+    { slug: "system-arch", name: "System Architecture" },
+  ]},
+  { slug: "bi", name: "Business Intelligence", color: "#10b981", icon: "📊", topics: [
+    { slug: "dashboard-design", name: "Dashboard Design" },
+    { slug: "kpi-metrics", name: "KPI Definition & Metrics" },
+    { slug: "etl", name: "ETL Processes" },
+    { slug: "data-warehouse", name: "Data Warehousing" },
+    { slug: "report-automation", name: "Report Automation" },
+    { slug: "stakeholder-comm", name: "Stakeholder Communication" },
+  ]},
+  { slug: "logistics", name: "Logistics", color: "#3b82f6", icon: "🚚", topics: [
+    { slug: "supply-chain", name: "Supply Chain Optimization" },
+    { slug: "inventory-mgmt", name: "Inventory Management" },
+    { slug: "transport-plan", name: "Transportation Planning" },
+    { slug: "warehouse-ops", name: "Warehouse Operations" },
+    { slug: "demand-forecast", name: "Demand Forecasting" },
+    { slug: "last-mile", name: "Last-Mile Delivery" },
+  ]},
+  { slug: "operations", name: "Operations", color: "#8b5cf6", icon: "🔧", topics: [
+    { slug: "process-improve", name: "Process Improvement" },
+    { slug: "lean-six-sigma", name: "Lean & Six Sigma" },
+    { slug: "project-mgmt", name: "Project Management" },
+    { slug: "resource-plan", name: "Resource Planning" },
+    { slug: "qa", name: "Quality Assurance" },
+    { slug: "change-mgmt", name: "Change Management" },
+  ]},
+  { slug: "finance", name: "Finance / Accounting", color: "#ef4444", icon: "💰", topics: [
+    { slug: "financial-stmts", name: "Financial Statements" },
+    { slug: "cost-analysis", name: "Cost Analysis" },
+    { slug: "budgeting", name: "Budgeting & Forecasting" },
+    { slug: "internal-controls", name: "Internal Controls" },
+    { slug: "cash-flow", name: "Cash Flow Management" },
+    { slug: "financial-modeling", name: "Financial Modeling" },
+  ]},
+  { slug: "database-systems", name: "Database Systems", color: "#0ea5e9", icon: "🗄️", topics: [
+    { slug: "sql-fundamentals", name: "SQL Fundamentals" },
+    { slug: "db-design", name: "Database Design & Normalization" },
+    { slug: "query-optimization", name: "Query Optimization" },
+    { slug: "transactions", name: "Transactions & ACID" },
+    { slug: "nosql", name: "NoSQL Databases" },
+    { slug: "data-migration", name: "Data Migration & ETL" },
+  ]},
+  { slug: "it-architecture", name: "IT Architecture & Infrastructure", color: "#d946ef", icon: "🖥️", topics: [
+    { slug: "networking", name: "Network Fundamentals" },
+    { slug: "cloud", name: "Cloud Computing" },
+    { slug: "security-iam", name: "Security & IAM" },
+    { slug: "containers", name: "Containerization & Docker" },
+    { slug: "monitoring", name: "Monitoring & Observability" },
+    { slug: "disaster-recovery", name: "Disaster Recovery & BCP" },
+  ]},
+];
+
+const QUESTIONS = [
+  // Data Science
+  { topic: "python-ds", type: "recall", diff: 0.2, text: "Which Python library provides the DataFrame data structure for tabular data manipulation?", opts: ["NumPy", "Pandas", "SciPy", "Matplotlib"], answer: "Pandas", cp: false },
+  { topic: "python-ds", type: "recall", diff: 0.3, text: "What does the .shape attribute of a Pandas DataFrame return?", opts: ["Column names", "Data types", "A tuple of (rows, columns)", "Memory usage"], answer: "A tuple of (rows, columns)", cp: false },
+  { topic: "python-ds", type: "applied", diff: 0.5, text: "You have a DataFrame with 20% missing values in the 'salary' column. Which approach is most appropriate before building a regression model?", opts: ["Drop all rows with missing salary", "Fill with 0", "Impute with median and add a missingness indicator column", "Ignore the missing values"], answer: "Impute with median and add a missingness indicator column", cp: false },
+  { topic: "python-ds", type: "synthesis", diff: 0.8, text: "You need to process a 50GB CSV file on a machine with 16GB RAM. Which strategy combines memory efficiency with processing speed?", opts: ["Load entire file with pd.read_csv()", "Use pd.read_csv() with chunksize parameter and process iteratively", "Convert to Excel first then load", "Sample 10% randomly and ignore the rest"], answer: "Use pd.read_csv() with chunksize parameter and process iteratively", cp: false },
+  { topic: "statistics", type: "recall", diff: 0.3, text: "What does a p-value of 0.03 indicate in hypothesis testing at significance level 0.05?", opts: ["Fail to reject the null hypothesis", "Reject the null hypothesis", "The effect size is large", "The sample size is too small"], answer: "Reject the null hypothesis", cp: false },
+  { topic: "statistics", type: "applied", diff: 0.5, text: "You're comparing conversion rates between two website designs (A: 4.2%, B: 4.8%, n=500 each). Which test is most appropriate?", opts: ["Paired t-test", "Chi-squared test of proportions", "ANOVA", "Mann-Whitney U test"], answer: "Chi-squared test of proportions", cp: false },
+  { topic: "statistics", type: "synthesis", diff: 0.8, text: "A team reports their A/B test shows 95% confidence. However, they ran 12 tests and only report the one significant result. What is the core issue?", opts: ["Sample size is too small", "Multiple comparison problem (p-hacking)", "Wrong statistical test used", "Confidence interval too wide"], answer: "Multiple comparison problem (p-hacking)", cp: false },
+  { topic: "ml-fundamentals", type: "recall", diff: 0.3, text: "What is the primary purpose of splitting data into training and test sets?", opts: ["To reduce computation time", "To evaluate model generalization on unseen data", "To increase accuracy", "To handle missing values"], answer: "To evaluate model generalization on unseen data", cp: false },
+  { topic: "ml-fundamentals", type: "applied", diff: 0.6, text: "Your model has 99% training accuracy but 62% test accuracy. What is the most likely issue?", opts: ["Underfitting", "Overfitting", "Data leakage", "Wrong evaluation metric"], answer: "Overfitting", cp: false },
+  { topic: "ml-fundamentals", type: "synthesis", diff: 0.8, text: "You must choose between a highly accurate black-box model and a less accurate interpretable model for a loan approval system. Which factor is most decisive?", opts: ["Computation cost", "Regulatory requirements for explainability", "Training data size", "Model deployment speed"], answer: "Regulatory requirements for explainability", cp: false },
+  { topic: "model-eval", type: "applied", diff: 0.6, text: "For a cancer screening model, which metric should be prioritized?", opts: ["Accuracy", "Precision", "Recall (sensitivity)", "F1 score"], answer: "Recall (sensitivity)", cp: false },
+  { topic: "model-eval", type: "synthesis", diff: 0.8, text: "Your model has 0.95 AUC on cross-validation but 0.72 AUC in production. What is the most likely root cause?", opts: ["Random chance", "Data drift — production data distribution differs from training", "The AUC metric is unreliable", "Cross-validation folds were too few"], answer: "Data drift — production data distribution differs from training", cp: false },
+  { topic: "model-eval", type: "recall", diff: 0.4, text: "CHECKPOINT: Can you evaluate a classification model using precision, recall, F1, and ROC-AUC, and explain trade-offs to a non-technical stakeholder?", opts: ["Yes - demonstrated", "Partially - need review", "No - need to learn", "Skipped"], answer: "Yes - demonstrated", cp: true },
+  // Engineering
+  { topic: "design-patterns", type: "recall", diff: 0.3, text: "Which design pattern ensures a class has only one instance and provides a global access point?", opts: ["Factory", "Singleton", "Observer", "Strategy"], answer: "Singleton", cp: false },
+  { topic: "design-patterns", type: "applied", diff: 0.5, text: "You need to support multiple payment methods (credit card, PayPal, crypto) with the same checkout interface. Which pattern fits best?", opts: ["Singleton", "Observer", "Strategy", "Decorator"], answer: "Strategy", cp: false },
+  { topic: "api-design", type: "recall", diff: 0.2, text: "Which HTTP method is idempotent and used to update an entire resource?", opts: ["POST", "PUT", "PATCH", "DELETE"], answer: "PUT", cp: false },
+  { topic: "api-design", type: "synthesis", diff: 0.7, text: "You're designing an API consumed by 50 microservices. Breaking changes are costly. Which versioning strategy best balances evolution with stability?", opts: ["No versioning, always backward compatible", "URL path versioning (v1/v2) with 6-month deprecation windows", "Query parameter versioning", "Different subdomains per version"], answer: "URL path versioning (v1/v2) with 6-month deprecation windows", cp: false },
+  { topic: "system-arch", type: "synthesis", diff: 0.8, text: "You're designing a system for 10M daily users. The read-to-write ratio is 100:1. Which architecture pattern is most appropriate?", opts: ["Single monolithic database", "CQRS with read replicas", "Write-heavy NoSQL cluster", "File-based storage"], answer: "CQRS with read replicas", cp: false },
+  { topic: "system-arch", type: "recall", diff: 0.5, text: "CHECKPOINT: Can you draw a system architecture diagram showing load balancer, app servers, cache layer, and database with clear data flow?", opts: ["Yes - demonstrated", "Partially - need review", "No - need to learn", "Skipped"], answer: "Yes - demonstrated", cp: true },
+  // BI
+  { topic: "dashboard-design", type: "applied", diff: 0.5, text: "A sales dashboard has 30 charts on one screen. Users complain they can't find what matters. What is the best redesign approach?", opts: ["Make charts smaller to fit more", "Limit to 5-7 key metrics with tabs for detail views", "Add a search bar", "Use brighter colors for important charts"], answer: "Limit to 5-7 key metrics with tabs for detail views", cp: false },
+  { topic: "etl", type: "applied", diff: 0.6, text: "Your ETL pipeline processes 2M rows nightly but occasionally fails at row 1.5M due to malformed data. What architectural improvement prevents data loss?", opts: ["Increase memory", "Add checkpointing with dead-letter queue for failed rows", "Process fewer rows", "Run the pipeline twice"], answer: "Add checkpointing with dead-letter queue for failed rows", cp: false },
+  { topic: "data-warehouse", type: "recall", diff: 0.3, text: "What is a star schema in data warehousing?", opts: ["A backup strategy", "A design with a central fact table connected to dimension tables", "A type of NoSQL database", "A data encryption method"], answer: "A design with a central fact table connected to dimension tables", cp: false },
+  // Logistics
+  { topic: "supply-chain", type: "recall", diff: 0.3, text: "What is the 'bullwhip effect' in supply chains?", opts: ["Demand decreases upstream", "Small demand changes at retail amplify into large swings upstream", "Suppliers always over-deliver", "Transportation costs decrease over time"], answer: "Small demand changes at retail amplify into large swings upstream", cp: false },
+  { topic: "inventory-mgmt", type: "applied", diff: 0.5, text: "An item has annual demand of 10,000 units, ordering cost of $50/order, and holding cost of $2/unit/year. What is the Economic Order Quantity?", opts: ["500 units", "707 units", "1000 units", "250 units"], answer: "707 units", cp: false },
+  { topic: "inventory-mgmt", type: "synthesis", diff: 0.7, text: "CHECKPOINT: Can you design an inventory policy (reorder point, safety stock, EOQ) for a product with seasonal demand and variable lead times?", opts: ["Yes - demonstrated", "Partially - need review", "No - need to learn", "Skipped"], answer: "Yes - demonstrated", cp: true },
+  // Operations
+  { topic: "lean-six-sigma", type: "recall", diff: 0.3, text: "What are the 8 wastes in Lean (DOWNTIME)?", opts: ["Financial losses only", "Defects, Overproduction, Waiting, Non-utilized talent, Transportation, Inventory, Motion, Extra-processing", "Only manufacturing defects", "Time wasted in meetings"], answer: "Defects, Overproduction, Waiting, Non-utilized talent, Transportation, Inventory, Motion, Extra-processing", cp: false },
+  { topic: "project-mgmt", type: "applied", diff: 0.5, text: "Your project is 2 weeks behind schedule with a fixed deadline. The team is already working overtime. What is the best recovery strategy?", opts: ["Add more overtime", "Negotiate scope reduction with stakeholders for must-have vs nice-to-have features", "Extend the deadline", "Replace the team"], answer: "Negotiate scope reduction with stakeholders for must-have vs nice-to-have features", cp: false },
+  { topic: "lean-six-sigma", type: "recall", diff: 0.4, text: "CHECKPOINT: Can you lead a DMAIC (Define-Measure-Analyze-Improve-Control) project from problem statement through to sustained improvement?", opts: ["Yes - demonstrated", "Partially - need review", "No - need to learn", "Skipped"], answer: "Yes - demonstrated", cp: true },
+  // Finance
+  { topic: "financial-stmts", type: "applied", diff: 0.5, text: "A company shows strong net income but is struggling to pay suppliers. Which statement reveals the issue?", opts: ["Income statement", "Balance sheet", "Cash flow statement", "Notes to financial statements"], answer: "Cash flow statement", cp: false },
+  { topic: "internal-controls", type: "applied", diff: 0.6, text: "An employee can both create vendors in the system and approve payments. What control weakness does this represent?", opts: ["No issue", "Segregation of duties violation — creates fraud risk for fictitious vendor payments", "Efficiency improvement", "Normal for small companies"], answer: "Segregation of duties violation — creates fraud risk for fictitious vendor payments", cp: false },
+  { topic: "cost-analysis", type: "synthesis", diff: 0.8, text: "CHECKPOINT: Can you perform a break-even analysis, calculate contribution margins, and recommend a pricing strategy for a multi-product portfolio?", opts: ["Yes - demonstrated", "Partially - need review", "No - need to learn", "Skipped"], answer: "Yes - demonstrated", cp: true },
+  // Database Systems
+  { topic: "sql-fundamentals", type: "recall", diff: 0.2, text: "What is the difference between WHERE and HAVING clauses in SQL?", opts: ["No difference", "WHERE filters rows before grouping; HAVING filters groups after aggregation", "HAVING is faster", "WHERE only works with numbers"], answer: "WHERE filters rows before grouping; HAVING filters groups after aggregation", cp: false },
+  { topic: "sql-fundamentals", type: "applied", diff: 0.5, text: "You need to find the top 3 customers by total order value. Which SQL pattern is correct?", opts: ["SELECT * FROM orders LIMIT 3", "SELECT customer_id, SUM(amount) as total FROM orders GROUP BY customer_id ORDER BY total DESC LIMIT 3", "SELECT TOP 3 FROM customers", "SELECT DISTINCT customer_id FROM orders"], answer: "SELECT customer_id, SUM(amount) as total FROM orders GROUP BY customer_id ORDER BY total DESC LIMIT 3", cp: false },
+  { topic: "sql-fundamentals", type: "recall", diff: 0.3, text: "CHECKPOINT: Can you write complex SQL queries with JOINs, subqueries, window functions, and CTEs?", opts: ["Yes - demonstrated", "Partially - need review", "No - need to learn", "Skipped"], answer: "Yes - demonstrated", cp: true },
+  { topic: "db-design", type: "applied", diff: 0.6, text: "A table stores customer_name, customer_city, city_state, and city_population. Which normalization issue exists?", opts: ["No issue", "Transitive dependency: city_state and city_population depend on customer_city, not the primary key", "Too many columns", "Missing primary key"], answer: "Transitive dependency: city_state and city_population depend on customer_city, not the primary key", cp: false },
+  { topic: "transactions", type: "synthesis", diff: 0.8, text: "Your e-commerce system uses a microservices architecture. A checkout involves inventory, payment, and shipping services. How do you ensure data consistency across services?", opts: ["Use a single database transaction", "Implement the Saga pattern with compensating transactions", "Ignore consistency", "Make all services synchronous"], answer: "Implement the Saga pattern with compensating transactions", cp: false },
+  // IT Architecture
+  { topic: "cloud", type: "applied", diff: 0.6, text: "Your application has unpredictable traffic spikes (10x normal). Which cloud architecture handles this cost-effectively?", opts: ["Fixed-size VM cluster", "Auto-scaling group behind a load balancer with spot/preemptible instances for non-critical workloads", "Single large server", "On-premises hardware with peak capacity"], answer: "Auto-scaling group behind a load balancer with spot/preemptible instances for non-critical workloads", cp: false },
+  { topic: "security-iam", type: "applied", diff: 0.6, text: "A developer requests permanent admin access to production databases for debugging. What is the correct response?", opts: ["Grant permanent admin access", "Implement just-in-time access with time-limited elevation, audit logging, and approval workflow", "Deny all access", "Give read-only access permanently"], answer: "Implement just-in-time access with time-limited elevation, audit logging, and approval workflow", cp: false },
+  { topic: "security-iam", type: "synthesis", diff: 0.8, text: "CHECKPOINT: Can you design a Zero Trust security architecture for a hybrid cloud environment with SSO, MFA, network segmentation, and continuous verification?", opts: ["Yes - demonstrated", "Partially - need review", "No - need to learn", "Skipped"], answer: "Yes - demonstrated", cp: true },
+  { topic: "containers", type: "applied", diff: 0.5, text: "Your Docker image is 2.1GB and takes 10 minutes to build. What optimization reduces size and build time most?", opts: ["Use a bigger machine", "Multi-stage builds, alpine base image, and proper layer ordering for cache hits", "Don't use Docker", "Compress the image after building"], answer: "Multi-stage builds, alpine base image, and proper layer ordering for cache hits", cp: false },
+  { topic: "monitoring", type: "applied", diff: 0.6, text: "Your API has p99 latency of 8 seconds but p50 is 200ms. Users complain about slowness. What do traces reveal that metrics alone cannot?", opts: ["Average response time", "The exact call chain and bottleneck service causing the slow tail latency", "Total request count", "Server CPU usage"], answer: "The exact call chain and bottleneck service causing the slow tail latency", cp: false },
+  { topic: "disaster-recovery", type: "synthesis", diff: 0.8, text: "Your company has never tested their disaster recovery plan. The CEO asks you to validate it. What is the safest approach?", opts: ["Wait for a real disaster", "Conduct a tabletop exercise first, then a controlled failover test in non-production, then a full DR drill with stakeholder communication", "Run a full production failover immediately", "Just review the documentation"], answer: "Conduct a tabletop exercise first, then a controlled failover test in non-production, then a full DR drill with stakeholder communication", cp: false },
+];
+
+// ═══════════════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════════════
+
+let activeDomain = null;
+let activeTopic = null;
+let quizQuestions = [];
+let currentQ = 0;
+let answers = {};
+let showingResults = false;
+
+// ═══════════════════════════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════════════════════════
+
+function init() {
+  document.getElementById('questionCount').textContent = QUESTIONS.filter(q => !q.cp).length;
+  document.getElementById('checkpointCount').textContent = QUESTIONS.filter(q => q.cp).length;
+  renderSidebar();
+  renderDomainGrid();
+}
+
+function renderSidebar() {
+  const nav = document.getElementById('domainNav');
+  nav.innerHTML = '<div class="nav-item' + (!activeDomain ? ' active' : '') + '" onclick="showOverview()">' +
+    '<div class="nav-dot" style="background:var(--accent)"></div>All Domains<span class="nav-count">8</span></div>';
+
+  DOMAINS.forEach(d => {
+    const count = QUESTIONS.filter(q => d.topics.some(t => t.slug === q.topic)).length;
+    const isActive = activeDomain && activeDomain.slug === d.slug;
+    nav.innerHTML += `<div class="nav-item${isActive ? ' active' : ''}" onclick="selectDomain('${d.slug}')">
+      <div class="nav-dot" style="background:${d.color}"></div>${d.name}<span class="nav-count">${count}</span></div>`;
+  });
+}
+
+function renderDomainGrid() {
+  const grid = document.getElementById('domainGrid');
+  grid.innerHTML = '';
+  DOMAINS.forEach(d => {
+    const qCount = QUESTIONS.filter(q => d.topics.some(t => t.slug === q.topic)).length;
+    const cpCount = QUESTIONS.filter(q => q.cp && d.topics.some(t => t.slug === q.topic)).length;
+    grid.innerHTML += `<div class="domain-card" onclick="selectDomain('${d.slug}')">
+      <div class="domain-header">
+        <div class="domain-icon" style="background:${d.color}22;border:1px solid ${d.color}44">${d.icon}</div>
+        <div class="domain-info"><h3>${d.name}</h3><p>${d.topics.length} topics &middot; ${qCount} questions &middot; ${cpCount} checkpoints</p></div>
+      </div>
+      <div class="domain-topics">${d.topics.map(t => `<span class="topic-pill">${t.name}</span>`).join('')}</div>
+    </div>`;
+  });
+}
+
+function showOverview() {
+  activeDomain = null;
+  activeTopic = null;
+  document.getElementById('overviewView').style.display = '';
+  document.getElementById('quizView').style.display = 'none';
+  renderSidebar();
+}
+
+function selectDomain(slug) {
+  activeDomain = DOMAINS.find(d => d.slug === slug);
+  if (!activeDomain) return;
+  activeTopic = null;
+  showingResults = false;
+  document.getElementById('overviewView').style.display = 'none';
+  document.getElementById('quizView').style.display = '';
+  document.getElementById('resultsPanel').style.display = 'none';
+  document.getElementById('quizDomainTitle').textContent = activeDomain.icon + ' ' + activeDomain.name;
+  document.getElementById('quizDomainSub').textContent = `${activeDomain.topics.length} topics — select a topic or take the full domain quiz`;
+
+  renderTopicTabs();
+  startDomainQuiz();
+  renderSidebar();
+}
+
+function renderTopicTabs() {
+  const tabs = document.getElementById('topicTabs');
+  tabs.innerHTML = `<div class="tab${!activeTopic ? ' active' : ''}" onclick="startDomainQuiz()">All Topics</div>`;
+  activeDomain.topics.forEach(t => {
+    const hasQ = QUESTIONS.some(q => q.topic === t.slug);
+    if (hasQ) {
+      tabs.innerHTML += `<div class="tab${activeTopic === t.slug ? ' active' : ''}" onclick="startTopicQuiz('${t.slug}')">${t.name.split(' ').slice(0,2).join(' ')}</div>`;
+    }
+  });
+}
+
+function startDomainQuiz() {
+  activeTopic = null;
+  quizQuestions = QUESTIONS.filter(q => activeDomain.topics.some(t => t.slug === q.topic));
+  quizQuestions.sort(() => Math.random() - 0.5);
+  currentQ = 0;
+  answers = {};
+  showingResults = false;
+  document.getElementById('resultsPanel').style.display = 'none';
+  renderTopicTabs();
+  renderQuestion();
+}
+
+function startTopicQuiz(slug) {
+  activeTopic = slug;
+  quizQuestions = QUESTIONS.filter(q => q.topic === slug);
+  currentQ = 0;
+  answers = {};
+  showingResults = false;
+  document.getElementById('resultsPanel').style.display = 'none';
+  renderTopicTabs();
+  renderQuestion();
+}
+
+function renderQuestion() {
+  if (quizQuestions.length === 0) return;
+  const q = quizQuestions[currentQ];
+  const topic = activeDomain.topics.find(t => t.slug === q.topic);
+
+  document.getElementById('quizTopicName').textContent = topic ? topic.name : 'Quiz';
+
+  const badge = document.getElementById('qTypeBadge');
+  if (q.cp) {
+    badge.className = 'quiz-badge badge-checkpoint';
+    badge.textContent = 'Checkpoint';
+  } else {
+    badge.className = 'quiz-badge badge-' + q.type;
+    badge.textContent = q.type;
+  }
+
+  const progress = ((currentQ + 1) / quizQuestions.length) * 100;
+  document.getElementById('progressFill').style.width = progress + '%';
+  document.getElementById('qCounter').textContent = `Question ${currentQ + 1} of ${quizQuestions.length}`;
+
+  const diffColor = q.diff < 0.4 ? 'var(--accent)' : q.diff < 0.7 ? 'var(--warning)' : 'var(--danger)';
+  const diffLabel = q.diff < 0.4 ? 'Easy' : q.diff < 0.7 ? 'Medium' : 'Hard';
+
+  const body = document.getElementById('quizBody');
+  const selected = answers[currentQ];
+  const answered = selected !== undefined;
+
+  body.innerHTML = `
+    <div class="difficulty-bar">
+      <span>Difficulty: ${diffLabel}</span>
+      <div class="diff-track"><div class="diff-fill" style="width:${q.diff*100}%;background:${diffColor}"></div></div>
+    </div>
+    <div class="question-text">${q.text}</div>
+    <div class="options">
+      ${q.opts.map((opt, i) => {
+        const letter = String.fromCharCode(65 + i);
+        let cls = 'option-btn';
+        if (answered) {
+          if (opt === q.answer) cls += ' correct';
+          else if (opt === selected && opt !== q.answer) cls += ' wrong';
+        } else if (opt === selected) {
+          cls += ' selected';
+        }
+        return `<div class="${cls}" onclick="selectAnswer(${currentQ}, '${opt.replace(/'/g, "\\'")}', this)">
+          <div class="option-letter">${letter}</div>
+          <span>${opt}</span>
+        </div>`;
+      }).join('')}
+    </div>`;
+
+  document.getElementById('btnPrev').disabled = currentQ === 0;
+  const btnNext = document.getElementById('btnNext');
+  if (currentQ === quizQuestions.length - 1) {
+    btnNext.textContent = 'Finish Quiz';
+    btnNext.onclick = finishQuiz;
+  } else {
+    btnNext.textContent = 'Next';
+    btnNext.onclick = nextQuestion;
+  }
+}
+
+function selectAnswer(idx, answer, el) {
+  if (answers[idx] !== undefined) return; // Already answered
+  answers[idx] = answer;
+  renderQuestion();
+}
+
+function nextQuestion() {
+  if (currentQ < quizQuestions.length - 1) {
+    currentQ++;
+    renderQuestion();
+  }
+}
+
+function prevQuestion() {
+  if (currentQ > 0) {
+    currentQ--;
+    renderQuestion();
+  }
+}
+
+function finishQuiz() {
+  showingResults = true;
+  let total = quizQuestions.length;
+  let correct = 0;
+  let recall = { total: 0, correct: 0 };
+  let applied = { total: 0, correct: 0 };
+  let synthesis = { total: 0, correct: 0 };
+
+  quizQuestions.forEach((q, i) => {
+    const isCorrect = answers[i] === q.answer;
+    if (isCorrect) correct++;
+    const bucket = q.type === 'recall' ? recall : q.type === 'applied' ? applied : synthesis;
+    bucket.total++;
+    if (isCorrect) bucket.correct++;
+  });
+
+  const score = total > 0 ? Math.round((correct / total) * 100) : 0;
+
+  document.getElementById('resultsPanel').style.display = '';
+  document.getElementById('finalScore').textContent = score + '%';
+  document.getElementById('finalScore').style.color = score >= 80 ? 'var(--accent)' : score >= 60 ? 'var(--warning)' : 'var(--danger)';
+  document.getElementById('recallScore').textContent = recall.total > 0 ? Math.round((recall.correct / recall.total) * 100) + '%' : '-';
+  document.getElementById('appliedScore').textContent = applied.total > 0 ? Math.round((applied.correct / applied.total) * 100) + '%' : '-';
+  document.getElementById('synthScore').textContent = synthesis.total > 0 ? Math.round((synthesis.correct / synthesis.total) * 100) + '%' : '-';
+}
+
+function resetQuiz() {
+  showOverview();
+}
+
+init();
+</script>
+</body>
+</html>

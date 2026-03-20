@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4f46e5;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6366f1;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="shine" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.18" />
+      <stop offset="100%" style="stop-color:#ffffff;stop-opacity:0" />
+    </linearGradient>
+  </defs>
+
+  <!-- Rounded square background -->
+  <rect width="512" height="512" rx="96" ry="96" fill="url(#bg)" />
+  <!-- Subtle top shine -->
+  <rect width="512" height="256" rx="96" ry="96" fill="url(#shine)" />
+
+  <!-- Open book -->
+  <!-- Left page -->
+  <path d="M96 168 C96 152 108 140 124 140 L244 148 L244 372 L124 364 C108 364 96 352 96 336 Z"
+        fill="#ffffff" fill-opacity="0.95" />
+  <!-- Right page -->
+  <path d="M416 168 C416 152 404 140 388 140 L268 148 L268 372 L388 364 C404 364 416 352 416 336 Z"
+        fill="#ffffff" fill-opacity="0.85" />
+  <!-- Spine shadow -->
+  <rect x="244" y="140" width="24" height="232" fill="#4f46e5" opacity="0.25" rx="4" />
+  <!-- Spine line -->
+  <line x1="256" y1="148" x2="256" y2="364" stroke="#6366f1" stroke-width="3" opacity="0.6" />
+
+  <!-- Left page lines (text representation) -->
+  <line x1="120" y1="192" x2="228" y2="196" stroke="#6366f1" stroke-width="8" stroke-linecap="round" opacity="0.5" />
+  <line x1="120" y1="216" x2="228" y2="220" stroke="#6366f1" stroke-width="8" stroke-linecap="round" opacity="0.35" />
+  <line x1="120" y1="240" x2="200" y2="243" stroke="#6366f1" stroke-width="8" stroke-linecap="round" opacity="0.35" />
+
+  <!-- Right page lines -->
+  <line x1="284" y1="196" x2="392" y2="192" stroke="#6366f1" stroke-width="8" stroke-linecap="round" opacity="0.5" />
+  <line x1="284" y1="220" x2="392" y2="216" stroke="#6366f1" stroke-width="8" stroke-linecap="round" opacity="0.35" />
+  <line x1="284" y1="243" x2="360" y2="240" stroke="#6366f1" stroke-width="8" stroke-linecap="round" opacity="0.35" />
+
+  <!-- Neural network nodes overlaid at bottom of book -->
+  <!-- Center node -->
+  <circle cx="256" cy="330" r="18" fill="#f0f0ff" stroke="#6366f1" stroke-width="5" />
+  <!-- Left node -->
+  <circle cx="168" cy="310" r="13" fill="#e0e7ff" stroke="#818cf8" stroke-width="4" />
+  <!-- Right node -->
+  <circle cx="344" cy="310" r="13" fill="#e0e7ff" stroke="#818cf8" stroke-width="4" />
+  <!-- Connection lines -->
+  <line x1="181" y1="313" x2="238" y2="328" stroke="#818cf8" stroke-width="4" stroke-linecap="round" opacity="0.8" />
+  <line x1="331" y1="313" x2="274" y2="328" stroke="#818cf8" stroke-width="4" stroke-linecap="round" opacity="0.8" />
+  <!-- Top-left mini node -->
+  <circle cx="152" cy="278" r="8" fill="#c7d2fe" stroke="#818cf8" stroke-width="3" />
+  <line x1="159" y1="281" x2="162" y2="299" stroke="#818cf8" stroke-width="3" opacity="0.7" />
+  <!-- Top-right mini node -->
+  <circle cx="360" cy="278" r="8" fill="#c7d2fe" stroke="#818cf8" stroke-width="3" />
+  <line x1="353" y1="281" x2="350" y2="299" stroke="#818cf8" stroke-width="3" opacity="0.7" />
+
+  <!-- Small dot accent on center node (active indicator) -->
+  <circle cx="256" cy="330" r="7" fill="#6366f1" />
+</svg>

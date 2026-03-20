@@ -1,0 +1,141 @@
+@import "tailwindcss";
+
+/* ── Base CSS Variable Slots ─────────────────────────────────────────────
+   All themes override these via [data-theme="<name>"] selectors.
+   Default values are Pastel Glassmorphism (the default theme).
+──────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Background */
+  --bg-primary: #F0EEFF;
+  --bg-secondary: #E8E3FA;
+  --bg-tertiary: #DDD8F3;
+  --bg-surface: rgba(255, 255, 255, 0.62);
+
+  /* Text */
+  --text-primary: #2D2B55;
+  --text-secondary: #5B577D;
+  --text-muted: #9490B4;
+  --text-inverse: #FFFFFF;
+
+  /* Accent */
+  --accent-primary: #7C6BF0;
+  --accent-secondary: #4ECDC4;
+  --accent-success: #56C596;
+  --accent-warning: #FFB347;
+  --accent-danger: #FF6B6B;
+  --accent-info: #54A0FF;
+
+  /* Borders */
+  --border-color: rgba(124, 107, 240, 0.15);
+  --border-radius: 16px;
+  --border-style: solid;
+
+  /* Typography */
+  --font-display: 'Nunito', 'Segoe UI', sans-serif;
+  --font-body: 'Nunito Sans', system-ui, sans-serif;
+  --font-code: 'Fira Code', 'Consolas', monospace;
+
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(124, 107, 240, 0.08);
+  --shadow-md: 0 8px 24px rgba(124, 107, 240, 0.12);
+  --shadow-lg: 0 16px 48px rgba(124, 107, 240, 0.16);
+
+  /* Chart Colors (6 domains) */
+  --chart-1: #7C6BF0;
+  --chart-2: #4ECDC4;
+  --chart-3: #FF6B6B;
+  --chart-4: #FFB347;
+  --chart-5: #54A0FF;
+  --chart-6: #56C596;
+
+  /* Status Colors */
+  --status-completed: var(--accent-success);
+  --status-scheduled: var(--accent-info);
+  --status-missed: var(--accent-danger);
+  --status-rescheduled: var(--accent-warning);
+
+  /* Interactive */
+  --hover-opacity: 0.85;
+  --focus-ring: 0 0 0 2px var(--accent-primary);
+  --transition-speed: 200ms;
+
+  /* Spacing */
+  --sidebar-width: 240px;
+  --header-height: 56px;
+  --status-bar-height: 32px;
+}
+
+/* ── Global Reset & Base Styles ──────────────────────────────────────── */
+
+html {
+  font-family: var(--font-body);
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+}
+
+/* ── Typography ──────────────────────────────────────────────────────── */
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  color: var(--text-primary);
+}
+
+code, pre, kbd, samp {
+  font-family: var(--font-code);
+}
+
+/* ── Scrollbar ───────────────────────────────────────────────────────── */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* ── Selection ───────────────────────────────────────────────────────── */
+
+::selection {
+  background: var(--accent-primary);
+  color: var(--text-inverse);
+}
+
+/* ── Focus ───────────────────────────────────────────────────────────── */
+
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* ── Transitions ─────────────────────────────────────────────────────── */
+
+[data-theme] * {
+  transition: background-color var(--transition-speed) ease,
+              color var(--transition-speed) ease,
+              border-color var(--transition-speed) ease;
+}

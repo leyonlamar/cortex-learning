@@ -1,0 +1,158 @@
+/* ── Neo-Brutalist Data Lab Theme ───────────────────────────────────────
+   Identity: Bold, utilitarian, raw grid. Unpolished on purpose. Data > decoration.
+   Palette: warm white #FFFEF5, pure black #000, brutalist yellow #FFD60A
+   Fonts: Syncopate (display, wide uppercase), Space Mono (body+code)
+   Signature: 3px black borders, offset box-shadows, uppercase headings
+──────────────────────────────────────────────────────────────────────── */
+
+[data-theme="brutalist"] {
+  /* Background */
+  --bg-primary: #FFFEF5;
+  --bg-secondary: #FFF9E6;
+  --bg-tertiary: #FFF3CC;
+  --bg-surface: #FFFFFF;
+
+  /* Text */
+  --text-primary: #000000;
+  --text-secondary: #333333;
+  --text-muted: #666666;
+  --text-inverse: #000000;
+
+  /* Accent */
+  --accent-primary: #FFD60A;
+  --accent-secondary: #000000;
+  --accent-success: #00A651;
+  --accent-warning: #FF8C00;
+  --accent-danger: #FF0000;
+  --accent-info: #0066FF;
+
+  /* Borders — THICK */
+  --border-color: #000000;
+  --border-radius: 0px;
+  --border-style: solid;
+
+  /* Typography — raw, wide */
+  --font-display: 'Syncopate', 'Impact', sans-serif;
+  --font-body: 'Space Mono', 'Courier New', monospace;
+  --font-code: 'Space Mono', 'Courier New', monospace;
+
+  /* Shadows — hard offset, zero blur */
+  --shadow-sm: 3px 3px 0 #000000;
+  --shadow-md: 5px 5px 0 #000000;
+  --shadow-lg: 8px 8px 0 #000000;
+
+  /* Chart Colors — flat, primary */
+  --chart-1: #FFD60A;
+  --chart-2: #0066FF;
+  --chart-3: #FF0000;
+  --chart-4: #00A651;
+  --chart-5: #FF8C00;
+  --chart-6: #000000;
+
+  /* Interactive */
+  --hover-opacity: 1;
+  --focus-ring: 0 0 0 3px #FFD60A;
+  --transition-speed: 100ms;
+}
+
+/* ── Raw white background ──────────────────────────────────────────── */
+
+[data-theme="brutalist"] body {
+  background: #FFFEF5;
+}
+
+/* ── Thick-bordered cards with offset shadow ───────────────────────── */
+
+[data-theme="brutalist"] [data-card] {
+  border: 3px solid #000000;
+  border-radius: 0;
+  box-shadow: 5px 5px 0 #000000;
+}
+
+[data-theme="brutalist"] [data-card]:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 7px 7px 0 #000000;
+}
+
+[data-theme="brutalist"] [data-card]:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 #000000;
+}
+
+/* ── Uppercase headings — signature brutalist ──────────────────────── */
+
+[data-theme="brutalist"] h1,
+[data-theme="brutalist"] h2,
+[data-theme="brutalist"] h3,
+[data-theme="brutalist"] h4,
+[data-theme="brutalist"] h5,
+[data-theme="brutalist"] h6 {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+}
+
+/* ── Yellow-highlight sidebar ──────────────────────────────────────── */
+
+[data-theme="brutalist"] aside {
+  background: #FFD60A !important;
+  border-right: 3px solid #000000 !important;
+}
+
+[data-theme="brutalist"] aside span,
+[data-theme="brutalist"] aside button {
+  color: #000000 !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="brutalist"] aside button[style*="background: var(--accent-primary)"] {
+  background: #000000 !important;
+  color: #FFD60A !important;
+}
+
+[data-theme="brutalist"] aside svg circle {
+  stroke: #000000;
+}
+
+[data-theme="brutalist"] aside svg text {
+  fill: #000000 !important;
+}
+
+/* ── Chunky buttons — no rounded corners ───────────────────────────── */
+
+[data-theme="brutalist"] button {
+  border-radius: 0 !important;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* ── Raw dividers ──────────────────────────────────────────────────── */
+
+[data-theme="brutalist"] hr {
+  border: none;
+  border-top: 3px solid #000000;
+  margin: 1rem 0;
+}
+
+/* ── High-contrast selection ───────────────────────────────────────── */
+
+[data-theme="brutalist"] ::selection {
+  background: #FFD60A;
+  color: #000000;
+}
+
+/* ── Thick scrollbar ───────────────────────────────────────────────── */
+
+[data-theme="brutalist"] ::-webkit-scrollbar {
+  width: 10px;
+}
+
+[data-theme="brutalist"] ::-webkit-scrollbar-thumb {
+  background: #000000;
+  border-radius: 0;
+}
+
+[data-theme="brutalist"] ::-webkit-scrollbar-track {
+  background: #FFD60A;
+}

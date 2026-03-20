@@ -1,0 +1,135 @@
+/* ── Corporate Navy / Executive Minimal Theme ──────────────────────────
+   Identity: Boardroom-grade precision. Every pixel justified.
+   Palette: pure white, navy #0F1729, slate neutrals, corporate blue #1A56DB
+   Fonts: IBM Plex Sans (display+body), IBM Plex Mono (code)
+   Signature: navy topbar, hairline borders only (no shadows), tabular density
+──────────────────────────────────────────────────────────────────────── */
+
+[data-theme="executive"] {
+  /* Background */
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #F8F9FB;
+  --bg-tertiary: #F0F2F5;
+  --bg-surface: #FFFFFF;
+
+  /* Text */
+  --text-primary: #0F1729;
+  --text-secondary: #3D4A5C;
+  --text-muted: #8892A0;
+  --text-inverse: #FFFFFF;
+
+  /* Accent */
+  --accent-primary: #1A56DB;
+  --accent-secondary: #0F1729;
+  --accent-success: #057A55;
+  --accent-warning: #C27803;
+  --accent-danger: #C81E1E;
+  --accent-info: #1A56DB;
+
+  /* Borders — hairline only */
+  --border-color: #E2E5EA;
+  --border-radius: 4px;
+  --border-style: solid;
+
+  /* Typography — IBM Plex for authority */
+  --font-display: 'IBM Plex Sans', 'Segoe UI', sans-serif;
+  --font-body: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-code: 'IBM Plex Mono', 'Consolas', monospace;
+
+  /* Shadows — NONE. Borders define elevation. */
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: 0 1px 3px rgba(15, 23, 41, 0.08);
+
+  /* Chart Colors — muted corporate */
+  --chart-1: #1A56DB;
+  --chart-2: #057A55;
+  --chart-3: #C81E1E;
+  --chart-4: #C27803;
+  --chart-5: #6B21A8;
+  --chart-6: #0E7490;
+
+  /* Interactive */
+  --hover-opacity: 0.92;
+  --focus-ring: 0 0 0 2px #1A56DB;
+  --transition-speed: 150ms;
+}
+
+/* ── Clean white background, no texture ────────────────────────────── */
+
+[data-theme="executive"] body {
+  background: #FFFFFF;
+}
+
+/* ── Cards: border-only elevation ──────────────────────────────────── */
+
+[data-theme="executive"] [data-card] {
+  box-shadow: none;
+  border: 1px solid #E2E5EA;
+}
+
+[data-theme="executive"] [data-card]:hover {
+  border-color: #CBD0D8;
+  box-shadow: none;
+  transform: none;
+}
+
+/* ── Navy sidebar ──────────────────────────────────────────────────── */
+
+[data-theme="executive"] aside {
+  background: #0F1729 !important;
+  border-right: 1px solid #1E293B !important;
+}
+
+[data-theme="executive"] aside span,
+[data-theme="executive"] aside button {
+  color: #C8CDD5 !important;
+}
+
+[data-theme="executive"] aside button[style*="background: var(--accent-primary)"] {
+  background: #1A56DB !important;
+  color: #FFFFFF !important;
+}
+
+[data-theme="executive"] aside svg circle {
+  stroke: #1E293B;
+}
+
+[data-theme="executive"] aside svg text {
+  fill: #C8CDD5 !important;
+}
+
+/* ── Tight table-like spacing ──────────────────────────────────────── */
+
+[data-theme="executive"] main {
+  padding: 1.25rem !important;
+}
+
+/* ── Sharp buttons ─────────────────────────────────────────────────── */
+
+[data-theme="executive"] button {
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+/* ── Crisp selection ───────────────────────────────────────────────── */
+
+[data-theme="executive"] ::selection {
+  background: #1A56DB;
+  color: #FFFFFF;
+}
+
+/* ── Minimal scrollbar ─────────────────────────────────────────────── */
+
+[data-theme="executive"] ::-webkit-scrollbar {
+  width: 4px;
+}
+
+[data-theme="executive"] ::-webkit-scrollbar-thumb {
+  background: #CBD0D8;
+  border-radius: 2px;
+}
+
+[data-theme="executive"] ::-webkit-scrollbar-track {
+  background: transparent;
+}

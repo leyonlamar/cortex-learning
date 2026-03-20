@@ -1,0 +1,128 @@
+/* ── NASA Mission Control Theme ──────────────────────────────────────────
+   Palette: void #0a0a0f, amber #f59e0b, cyan #06b6d4, green #22c55e, red #ef4444
+   Fonts: Orbitron (display), IBM Plex Mono (body + code)
+   Details: uppercase headings, dashed borders, leading-zero numbers,
+            glowing status dots, scan-line overlay, segmented progress bars,
+            star-field background
+──────────────────────────────────────────────────────────────────────── */
+
+[data-theme="nasa"] {
+  /* Background */
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #111118;
+  --bg-tertiary: #1a1a24;
+  --bg-surface: #14141e;
+
+  /* Text */
+  --text-primary: #e8e8ec;
+  --text-secondary: #a0a0b0;
+  --text-muted: #606070;
+  --text-inverse: #0a0a0f;
+
+  /* Accent */
+  --accent-primary: #f59e0b;
+  --accent-secondary: #06b6d4;
+  --accent-success: #22c55e;
+  --accent-warning: #f59e0b;
+  --accent-danger: #ef4444;
+  --accent-info: #06b6d4;
+
+  /* Borders */
+  --border-color: #2a2a3a;
+  --border-radius: 2px;
+  --border-style: dashed;
+
+  /* Typography */
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-body: 'Space Mono', 'Courier New', monospace;
+  --font-code: 'Space Mono', 'Courier New', monospace;
+
+  /* Shadows — glow effects */
+  --shadow-sm: 0 0 4px rgba(245, 158, 11, 0.1);
+  --shadow-md: 0 0 8px rgba(245, 158, 11, 0.15);
+  --shadow-lg: 0 0 16px rgba(245, 158, 11, 0.2);
+
+  /* Chart Colors */
+  --chart-1: #f59e0b;
+  --chart-2: #06b6d4;
+  --chart-3: #22c55e;
+  --chart-4: #ef4444;
+  --chart-5: #8b5cf6;
+  --chart-6: #ec4899;
+
+  /* Interactive */
+  --hover-opacity: 0.9;
+  --focus-ring: 0 0 0 2px #f59e0b;
+}
+
+/* ── Star-field background ───────────────────────────────────────────── */
+
+[data-theme="nasa"] body {
+  background-image:
+    radial-gradient(1px 1px at 10% 20%, rgba(255, 255, 255, 0.3) 0%, transparent 100%),
+    radial-gradient(1px 1px at 30% 60%, rgba(255, 255, 255, 0.2) 0%, transparent 100%),
+    radial-gradient(1px 1px at 50% 10%, rgba(255, 255, 255, 0.25) 0%, transparent 100%),
+    radial-gradient(1px 1px at 70% 40%, rgba(255, 255, 255, 0.15) 0%, transparent 100%),
+    radial-gradient(1px 1px at 90% 80%, rgba(255, 255, 255, 0.3) 0%, transparent 100%),
+    radial-gradient(1px 1px at 15% 90%, rgba(255, 255, 255, 0.2) 0%, transparent 100%),
+    radial-gradient(1px 1px at 85% 15%, rgba(255, 255, 255, 0.15) 0%, transparent 100%);
+  background-size: 200px 200px;
+}
+
+/* ── Uppercase headings ──────────────────────────────────────────────── */
+
+[data-theme="nasa"] h1,
+[data-theme="nasa"] h2,
+[data-theme="nasa"] h3,
+[data-theme="nasa"] h4,
+[data-theme="nasa"] h5,
+[data-theme="nasa"] h6 {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* ── Dashed borders ──────────────────────────────────────────────────── */
+
+[data-theme="nasa"] [data-card],
+[data-theme="nasa"] .card {
+  border-style: dashed;
+  border-color: var(--border-color);
+}
+
+/* ── Glowing status dots ─────────────────────────────────────────────── */
+
+[data-theme="nasa"] [data-status="active"],
+[data-theme="nasa"] [data-status="completed"] {
+  box-shadow: 0 0 6px currentColor, 0 0 12px currentColor;
+}
+
+/* ── Scan-line overlay ───────────────────────────────────────────────── */
+
+[data-theme="nasa"]::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.03) 2px,
+    rgba(0, 0, 0, 0.03) 4px
+  );
+}
+
+/* ── Segmented progress bars ─────────────────────────────────────────── */
+
+[data-theme="nasa"] progress,
+[data-theme="nasa"] [role="progressbar"] {
+  border: 1px dashed var(--border-color);
+  background: repeating-linear-gradient(
+    90deg,
+    var(--bg-tertiary) 0px,
+    var(--bg-tertiary) 8px,
+    transparent 8px,
+    transparent 10px
+  );
+}

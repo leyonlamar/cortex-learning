@@ -1,0 +1,164 @@
+/* ── Dark OLED Ops Console Theme ────────────────────────────────────────
+   Identity: High density, low glare, terminal-adjacent but modern.
+   Palette: true black #000, surface #0D0D0D, green #00FF88, amber #FFB800
+   Fonts: JetBrains Mono (display+code), IBM Plex Sans (body)
+   Signature: true-black OLED bg, green terminal accents, glow effects
+──────────────────────────────────────────────────────────────────────── */
+
+[data-theme="console"] {
+  /* Background — true OLED black */
+  --bg-primary: #000000;
+  --bg-secondary: #0A0A0A;
+  --bg-tertiary: #141414;
+  --bg-surface: #0D0D0D;
+
+  /* Text — not pure white (reduces glare) */
+  --text-primary: #E0E0E0;
+  --text-secondary: #999999;
+  --text-muted: #555555;
+  --text-inverse: #000000;
+
+  /* Accent — terminal green + amber */
+  --accent-primary: #00FF88;
+  --accent-secondary: #00BFFF;
+  --accent-success: #00FF88;
+  --accent-warning: #FFB800;
+  --accent-danger: #FF4444;
+  --accent-info: #00BFFF;
+
+  /* Borders — subtle, low-opacity */
+  --border-color: #1E1E1E;
+  --border-radius: 6px;
+  --border-style: solid;
+
+  /* Typography — terminal precision */
+  --font-display: 'JetBrains Mono', 'Consolas', monospace;
+  --font-body: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-code: 'JetBrains Mono', 'Consolas', monospace;
+
+  /* Shadows — glow-based */
+  --shadow-sm: 0 0 4px rgba(0, 255, 136, 0.06);
+  --shadow-md: 0 0 12px rgba(0, 255, 136, 0.08);
+  --shadow-lg: 0 0 24px rgba(0, 255, 136, 0.12);
+
+  /* Chart Colors — neon on black */
+  --chart-1: #00FF88;
+  --chart-2: #00BFFF;
+  --chart-3: #FF4444;
+  --chart-4: #FFB800;
+  --chart-5: #BF5AF2;
+  --chart-6: #FF6EC7;
+
+  /* Interactive */
+  --hover-opacity: 0.85;
+  --focus-ring: 0 0 0 2px rgba(0, 255, 136, 0.5);
+  --transition-speed: 200ms;
+}
+
+/* ── True black background ─────────────────────────────────────────── */
+
+[data-theme="console"] body {
+  background: #000000;
+}
+
+/* ── Dark cards with green glow on hover ───────────────────────────── */
+
+[data-theme="console"] [data-card] {
+  border: 1px solid #1E1E1E;
+  background: #0D0D0D;
+}
+
+[data-theme="console"] [data-card]:hover {
+  border-color: rgba(0, 255, 136, 0.2);
+  box-shadow: 0 0 16px rgba(0, 255, 136, 0.06);
+}
+
+/* ── Dark sidebar ──────────────────────────────────────────────────── */
+
+[data-theme="console"] aside {
+  background: #050505 !important;
+  border-right-color: #1E1E1E !important;
+}
+
+[data-theme="console"] aside span {
+  color: #E0E0E0 !important;
+}
+
+[data-theme="console"] aside button {
+  color: #999999 !important;
+}
+
+[data-theme="console"] aside button[style*="background: var(--accent-primary)"] {
+  background: rgba(0, 255, 136, 0.15) !important;
+  color: #00FF88 !important;
+}
+
+[data-theme="console"] aside svg circle[stroke="var(--accent-primary)"] {
+  filter: drop-shadow(0 0 3px rgba(0, 255, 136, 0.4));
+}
+
+[data-theme="console"] aside svg text {
+  fill: #00FF88 !important;
+}
+
+/* ── Green-tinted buttons ──────────────────────────────────────────── */
+
+[data-theme="console"] button[style*="background: var(--accent-primary)"] {
+  background: rgba(0, 255, 136, 0.15) !important;
+  color: #00FF88 !important;
+  border: 1px solid rgba(0, 255, 136, 0.3) !important;
+}
+
+/* ── Scan-line overlay (subtle) ────────────────────────────────────── */
+
+[data-theme="console"] #root::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 255, 136, 0.01) 2px,
+    rgba(0, 255, 136, 0.01) 4px
+  );
+}
+
+/* ── Data values glow ──────────────────────────────────────────────── */
+
+[data-theme="console"] [data-value] {
+  text-shadow: 0 0 6px rgba(0, 255, 136, 0.3);
+  color: #00FF88 !important;
+}
+
+/* ── Terminal selection ────────────────────────────────────────────── */
+
+[data-theme="console"] ::selection {
+  background: rgba(0, 255, 136, 0.3);
+  color: #FFFFFF;
+}
+
+/* ── Thin dark scrollbar ───────────────────────────────────────────── */
+
+[data-theme="console"] ::-webkit-scrollbar {
+  width: 4px;
+}
+
+[data-theme="console"] ::-webkit-scrollbar-thumb {
+  background: #333333;
+  border-radius: 2px;
+}
+
+[data-theme="console"] ::-webkit-scrollbar-track {
+  background: #0A0A0A;
+}
+
+/* ── Reduced motion: disable scan-lines ────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  [data-theme="console"] #root::after {
+    display: none;
+  }
+}

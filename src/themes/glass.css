@@ -1,0 +1,113 @@
+/* ── Pastel Glassmorphism Theme ─────────────────────────────────────────
+   Identity: Airy, translucent, frosted crystal. Playful but professional.
+   Palette: lavender #F0EEFF, violet #7C6BF0, mint #4ECDC4, warm white
+   Fonts: Nunito (display), Nunito Sans (body), Fira Code (code)
+   Signature: frosted glass cards, gradient mesh bg, soft rainbow borders
+──────────────────────────────────────────────────────────────────────── */
+
+[data-theme="glass"] {
+  /* Background */
+  --bg-primary: #F0EEFF;
+  --bg-secondary: #E8E3FA;
+  --bg-tertiary: #DDD8F3;
+  --bg-surface: rgba(255, 255, 255, 0.62);
+
+  /* Text */
+  --text-primary: #2D2B55;
+  --text-secondary: #5B577D;
+  --text-muted: #9490B4;
+  --text-inverse: #FFFFFF;
+
+  /* Accent */
+  --accent-primary: #7C6BF0;
+  --accent-secondary: #4ECDC4;
+  --accent-success: #56C596;
+  --accent-warning: #FFB347;
+  --accent-danger: #FF6B6B;
+  --accent-info: #54A0FF;
+
+  /* Borders */
+  --border-color: rgba(124, 107, 240, 0.15);
+  --border-radius: 16px;
+  --border-style: solid;
+
+  /* Typography */
+  --font-display: 'Nunito', 'Segoe UI', sans-serif;
+  --font-body: 'Nunito Sans', system-ui, sans-serif;
+  --font-code: 'Fira Code', 'Consolas', monospace;
+
+  /* Shadows — colored, soft, diffused */
+  --shadow-sm: 0 2px 8px rgba(124, 107, 240, 0.08);
+  --shadow-md: 0 8px 24px rgba(124, 107, 240, 0.12);
+  --shadow-lg: 0 16px 48px rgba(124, 107, 240, 0.16);
+
+  /* Chart Colors — soft pastels */
+  --chart-1: #7C6BF0;
+  --chart-2: #4ECDC4;
+  --chart-3: #FF6B6B;
+  --chart-4: #FFB347;
+  --chart-5: #54A0FF;
+  --chart-6: #56C596;
+
+  /* Interactive */
+  --hover-opacity: 0.9;
+  --focus-ring: 0 0 0 3px rgba(124, 107, 240, 0.35);
+  --transition-speed: 250ms;
+}
+
+/* ── Gradient mesh background ──────────────────────────────────────── */
+
+[data-theme="glass"] body {
+  background:
+    radial-gradient(ellipse at 20% 20%, rgba(124, 107, 240, 0.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(78, 205, 196, 0.10) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(255, 179, 71, 0.06) 0%, transparent 60%),
+    #F0EEFF;
+}
+
+/* ── Frosted glass cards ───────────────────────────────────────────── */
+
+[data-theme="glass"] [data-card] {
+  backdrop-filter: blur(16px) saturate(1.6);
+  -webkit-backdrop-filter: blur(16px) saturate(1.6);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.62);
+}
+
+[data-theme="glass"] [data-card]:hover {
+  border-color: rgba(124, 107, 240, 0.25);
+  box-shadow: 0 8px 32px rgba(124, 107, 240, 0.14);
+}
+
+/* ── Glass sidebar ─────────────────────────────────────────────────── */
+
+[data-theme="glass"] aside {
+  backdrop-filter: blur(12px) saturate(1.4);
+  -webkit-backdrop-filter: blur(12px) saturate(1.4);
+  background: rgba(232, 227, 250, 0.75) !important;
+  border-right-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+/* ── Soft pill buttons ─────────────────────────────────────────────── */
+
+[data-theme="glass"] button[class*="px-"] {
+  border-radius: 9999px;
+}
+
+/* ── Rainbow shimmer on selection ──────────────────────────────────── */
+
+[data-theme="glass"] ::selection {
+  background: linear-gradient(135deg, #7C6BF0, #4ECDC4);
+  color: #FFFFFF;
+}
+
+/* ── Soft scrollbar ────────────────────────────────────────────────── */
+
+[data-theme="glass"] ::-webkit-scrollbar-thumb {
+  background: rgba(124, 107, 240, 0.25);
+  border-radius: 8px;
+}
+
+[data-theme="glass"] ::-webkit-scrollbar-track {
+  background: rgba(124, 107, 240, 0.05);
+}

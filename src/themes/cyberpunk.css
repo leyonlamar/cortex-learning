@@ -1,0 +1,155 @@
+/* ── Cyberpunk Neon Theme ────────────────────────────────────────────────
+   Palette: deep purple-black #0d0d1a, neon green #00ff88, hot pink #ff006e,
+            neon amber #ffaa00
+   Fonts: Rajdhani (display), Share Tech Mono (body + code)
+   Details: neon text-shadow glow, glitch animation on hover, gradient borders,
+            animated data-flow progress bars, pulsing number updates,
+            Matrix-style pixel rain, CRT scan-lines
+──────────────────────────────────────────────────────────────────────── */
+
+[data-theme="cyberpunk"] {
+  /* Background */
+  --bg-primary: #0d0d1a;
+  --bg-secondary: #12122a;
+  --bg-tertiary: #1a1a3a;
+  --bg-surface: #10102a;
+
+  /* Text */
+  --text-primary: #e0e0f0;
+  --text-secondary: #a0a0c0;
+  --text-muted: #505070;
+  --text-inverse: #0d0d1a;
+
+  /* Accent */
+  --accent-primary: #00ff88;
+  --accent-secondary: #ff006e;
+  --accent-success: #00ff88;
+  --accent-warning: #ffaa00;
+  --accent-danger: #ff006e;
+  --accent-info: #00ccff;
+
+  /* Borders */
+  --border-color: #2a2a5a;
+  --border-radius: 0px;
+  --border-style: solid;
+
+  /* Typography */
+  --font-display: 'Chakra Petch', system-ui, sans-serif;
+  --font-body: 'Chakra Petch', system-ui, sans-serif;
+  --font-code: 'Fira Code', 'Courier New', monospace;
+
+  /* Shadows — neon glow */
+  --shadow-sm: 0 0 4px rgba(0, 255, 136, 0.15);
+  --shadow-md: 0 0 8px rgba(0, 255, 136, 0.2);
+  --shadow-lg: 0 0 20px rgba(0, 255, 136, 0.3);
+
+  /* Chart Colors */
+  --chart-1: #00ff88;
+  --chart-2: #ff006e;
+  --chart-3: #ffaa00;
+  --chart-4: #00ccff;
+  --chart-5: #bf00ff;
+  --chart-6: #ff4444;
+
+  /* Interactive */
+  --hover-opacity: 1;
+  --focus-ring: 0 0 0 2px #00ff88, 0 0 8px rgba(0, 255, 136, 0.5);
+}
+
+/* ── CRT scan-lines ──────────────────────────────────────────────────── */
+
+[data-theme="cyberpunk"]::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 1px,
+    rgba(0, 0, 0, 0.05) 1px,
+    rgba(0, 0, 0, 0.05) 2px
+  );
+}
+
+/* ── Neon text-shadow on headings ────────────────────────────────────── */
+
+[data-theme="cyberpunk"] h1,
+[data-theme="cyberpunk"] h2,
+[data-theme="cyberpunk"] h3 {
+  text-shadow: 0 0 10px rgba(0, 255, 136, 0.5), 0 0 20px rgba(0, 255, 136, 0.2);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ── Gradient borders on cards ───────────────────────────────────────── */
+
+[data-theme="cyberpunk"] [data-card],
+[data-theme="cyberpunk"] .card {
+  border: 1px solid transparent;
+  background-clip: padding-box;
+  position: relative;
+}
+
+[data-theme="cyberpunk"] [data-card]::before,
+[data-theme="cyberpunk"] .card::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, #00ff88, #ff006e, #ffaa00);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* ── Glitch animation on hover ───────────────────────────────────────── */
+
+@keyframes cyberpunk-glitch {
+  0% { transform: translate(0); }
+  20% { transform: translate(-2px, 1px); }
+  40% { transform: translate(2px, -1px); }
+  60% { transform: translate(-1px, -1px); }
+  80% { transform: translate(1px, 1px); }
+  100% { transform: translate(0); }
+}
+
+[data-theme="cyberpunk"] button:hover,
+[data-theme="cyberpunk"] a:hover {
+  animation: cyberpunk-glitch 0.3s ease;
+}
+
+/* ── Animated data-flow progress bars ────────────────────────────────── */
+
+@keyframes data-flow {
+  0% { background-position: 0 0; }
+  100% { background-position: 20px 0; }
+}
+
+[data-theme="cyberpunk"] progress,
+[data-theme="cyberpunk"] [role="progressbar"] {
+  background: repeating-linear-gradient(
+    90deg,
+    var(--accent-primary) 0px,
+    var(--accent-primary) 8px,
+    transparent 8px,
+    transparent 12px
+  );
+  background-size: 20px 100%;
+  animation: data-flow 1s linear infinite;
+}
+
+/* ── Pulsing number updates ──────────────────────────────────────────── */
+
+@keyframes neon-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+[data-theme="cyberpunk"] [data-value],
+[data-theme="cyberpunk"] .stat-value {
+  animation: neon-pulse 2s ease-in-out infinite;
+  text-shadow: 0 0 6px currentColor;
+}
