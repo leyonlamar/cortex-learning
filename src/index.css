@@ -82,9 +82,12 @@ body {
   overflow: hidden;
 }
 
+body:has(.tracker-page) {
+  overflow: auto;
+}
+
 #root {
   min-height: 100vh;
-  display: flex;
 }
 
 /* ── Typography ──────────────────────────────────────────────────────── */

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import "./index.css";
 import "./styles/motion.css";
 import "./styles/completion-animations.css";
+import "./styles/tracker.css";
 import "./themes/glass.css";
 import "./themes/executive.css";
 import "./themes/brutalist.css";
@@ -11,16 +12,11 @@ import "./themes/luxury.css";
 import "./themes/nasa.css";
 import "./themes/studyhall.css";
 
-import { AppShell } from './components/layout/AppShell';
-import { TodayView } from './components/session/TodayView';
-import { WeeklyView } from './components/weekly/WeeklyView';
-import { TimelineView } from './components/timeline/TimelineView';
-import { AnalyticsView } from './components/dashboard/AnalyticsView';
-import { ForecastView } from './components/forecast/ForecastView';
-import { QuizView } from './components/quiz/QuizView';
+import { TrackerPage } from './components/tracker/TrackerPage';
 import { SettingsView } from './components/settings/SettingsView';
 import { OnboardingView } from './components/onboarding/OnboardingView';
 import { UserPickerView } from './components/onboarding/UserPickerView';
+import { Modal } from './components/shared/Modal';
 import { useTheme } from './hooks/useTheme';
 import { useUser } from './hooks/useUser';
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
@@ -36,12 +32,18 @@ type AppScreen = 'loading' | 'picker' | 'onboarding' | 'app';
 function AppInner() {
   const { user, loading: userLoading, create, switchUser, logout } = useUser();
   const { theme, switchTheme, themes } = useTheme(user?.id ?? null, user?.theme ?? 'glass');
-  const [activeView, setActiveView] = useState<ViewId>('quiz');
+  const [activeView, setActiveView] = useState<ViewId>('today');
   const [screen, setScreen] = useState<AppScreen>('loading');
   const [existingUsers, setExistingUsers] = useState<User[]>([]);
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   useKeyboardShortcuts({
-    onNavigate: setActiveView,
+    onNavigate: (view: ViewId) => {
+      if (view === 'settings') {
+        setSettingsOpen(true);
+      }
+      setActiveView(view);
+    },
     activeView,
     themes,
     currentTheme: theme,
@@ -96,39 +98,30 @@ function AppInner() {
     );
   }
 
-  const viewMap: Record<ViewId, React.ReactNode> = {
-    today: <TodayView onNavigateToQuiz={() => setActiveView('quiz')} />,
-    weekly: <WeeklyView onNavigateToQuiz={() => setActiveView('quiz')} />,
-    timeline: <TimelineView onWeekClick={() => setActiveView('weekly')} />,
-    analytics: <AnalyticsView />,
-    forecast: <ForecastView />,
-    quiz: <QuizView />,
-    settings: (
-      <SettingsView
-        theme={theme}
-        onThemeSwitch={switchTheme}
-        userName={user?.name ?? null}
-        onCreateUser={(name) => create(name, theme)}
-        onSwitchProfile={async () => {
-          logout();
-          const users = await listUsers();
-          setExistingUsers(users);
-          setScreen(users.length === 0 ? 'onboarding' : 'picker');
-        }}
-      />
-    ),
-  };
-
   return (
-    <AppShell
-      activeView={activeView}
-      onNavigate={setActiveView}
-      theme={theme}
-      onThemeSwitch={switchTheme}
-      themes={themes}
-    >
-      {viewMap[activeView]}
-    </AppShell>
+    <>
+      <TrackerPage onOpenSettings={() => setSettingsOpen(true)} />
+
+      <Modal
+        open={settingsOpen}
+        onClose={() => setSettingsOpen(false)}
+        title="Settings"
+      >
+        <SettingsView
+          theme={theme}
+          onThemeSwitch={switchTheme}
+          userName={user?.name ?? null}
+          onCreateUser={(name) => create(name, theme)}
+          onSwitchProfile={async () => {
+            setSettingsOpen(false);
+            logout();
+            const users = await listUsers();
+            setExistingUsers(users);
+            setScreen(users.length === 0 ? 'onboarding' : 'picker');
+          }}
+        />
+      </Modal>
+    </>
   );
 }
 
@@ -143,7 +136,7 @@ function App() {
     <ToastContext.Provider value={toastState}>
       <AppInner />
       {toastState.toasts.map((t, i) => (
-        <div key={t.id} style={{ bottom: `${1 + i * 4.5}rem`, position: 'fixed', right: 0, left: 0 }}>
+        <div key={t.id} style={{ bottom: `${1 + i * 4.5}rem`, position: 'fixed', right: 0, left: 0, zIndex: 100 }}>
           <Toast
             message={t.message}
             type={t.severity}

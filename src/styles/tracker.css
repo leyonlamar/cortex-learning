@@ -1,0 +1,914 @@
+/* ── Tracker Theme ─────────────────────────────────────────────────────
+   Dark navy single-page tracker styling, inspired by AppIntel.
+   Applied when .tracker-page is present — overrides theme CSS vars locally.
+──────────────────────────────────────────────────────────────────────── */
+
+.tracker-page {
+  --tk-bg-deep: #091722;
+  --tk-bg-base: #0b1d2a;
+  --tk-bg-card: #142a3b;
+  --tk-bg-elevated: #1f3a52;
+  --tk-bg-input: #0f273a;
+
+  --tk-text-primary: #f8f9fb;
+  --tk-text-secondary: #d5dbe6;
+  --tk-text-muted: #7a8ea0;
+
+  --tk-cyan: #a8dadc;
+  --tk-cyan-dim: rgba(168, 218, 220, 0.15);
+  --tk-green: #56c596;
+  --tk-green-dim: rgba(86, 197, 150, 0.15);
+  --tk-gold: #f6c98b;
+  --tk-gold-bg: rgba(82, 56, 20, 0.55);
+  --tk-gold-border: #f6c98b;
+  --tk-blue-border: #14344b;
+  --tk-blue-bg: #0f273a;
+  --tk-red: #ff6b6b;
+  --tk-red-dim: rgba(255, 107, 107, 0.15);
+
+  --tk-border: rgba(168, 218, 220, 0.1);
+  --tk-radius-lg: 16px;
+  --tk-radius-md: 12px;
+  --tk-radius-sm: 8px;
+  --tk-shadow-card: 0 20px 40px rgba(0, 0, 0, 0.35);
+  --tk-shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.2);
+
+  background: linear-gradient(180deg, var(--tk-bg-base) 0%, var(--tk-bg-deep) 100%);
+  color: var(--tk-text-primary);
+  font-family: 'Nunito Sans', system-ui, sans-serif;
+  min-height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* ── Scrollbar ──────────────────────────────────────────────────────── */
+
+.tracker-page::-webkit-scrollbar {
+  width: 6px;
+}
+
+.tracker-page::-webkit-scrollbar-track {
+  background: var(--tk-bg-deep);
+}
+
+.tracker-page::-webkit-scrollbar-thumb {
+  background: var(--tk-bg-elevated);
+  border-radius: 3px;
+}
+
+/* ── Sticky Header ──────────────────────────────────────────────────── */
+
+.tk-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: linear-gradient(180deg, var(--tk-bg-base) 0%, rgba(11, 29, 42, 0.95) 100%);
+  backdrop-filter: blur(12px);
+  padding: 24px 32px 16px;
+  border-bottom: 1px solid var(--tk-border);
+}
+
+.tk-header-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.tk-header-title {
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--tk-text-primary);
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+.tk-header-subtitle {
+  font-size: 0.875rem;
+  color: var(--tk-text-muted);
+  margin: 4px 0 0;
+  font-family: 'Fira Code', 'Consolas', monospace;
+}
+
+.tk-header-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.tk-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: 'Nunito Sans', system-ui, sans-serif;
+  color: var(--tk-text-secondary);
+  background: var(--tk-bg-card);
+  border: 1px solid var(--tk-border);
+  border-radius: var(--tk-radius-sm);
+  cursor: pointer;
+}
+
+.tk-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--tk-cyan);
+}
+
+.tk-btn-icon {
+  padding: 8px;
+  line-height: 0;
+}
+
+/* ── Progress Bar ───────────────────────────────────────────────────── */
+
+.tk-progress-track {
+  width: 100%;
+  height: 8px;
+  background: var(--tk-bg-elevated);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 4px;
+}
+
+.tk-progress-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--tk-cyan), var(--tk-green));
+  transition: width 0.4s ease;
+}
+
+/* ── Stats Bar ──────────────────────────────────────────────────────── */
+
+.tk-stats-bar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  padding: 0 32px;
+  margin-top: 24px;
+}
+
+.tk-stat-card {
+  background: var(--tk-bg-card);
+  border: 1px solid var(--tk-border);
+  border-radius: var(--tk-radius-md);
+  padding: 20px;
+  box-shadow: var(--tk-shadow-sm);
+}
+
+.tk-stat-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--tk-text-muted);
+  margin: 0 0 8px;
+}
+
+.tk-stat-value {
+  font-family: 'Fira Code', 'Consolas', monospace;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--tk-text-primary);
+  margin: 0;
+}
+
+.tk-stat-value .tk-stat-unit {
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--tk-text-muted);
+  margin-left: 4px;
+}
+
+/* ── Section Container ──────────────────────────────────────────────── */
+
+.tk-section {
+  padding: 0 32px;
+  margin-top: 24px;
+}
+
+.tk-section-title {
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--tk-text-primary);
+  margin: 0 0 12px;
+}
+
+/* ── Reference Accordion ────────────────────────────────────────────── */
+
+.tk-accordion {
+  background: var(--tk-bg-card);
+  border: 1px solid var(--tk-border);
+  border-radius: var(--tk-radius-md);
+  margin-bottom: 12px;
+  overflow: hidden;
+  box-shadow: var(--tk-shadow-sm);
+}
+
+.tk-accordion-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  width: 100%;
+  text-align: left;
+  color: var(--tk-text-primary);
+  font-family: 'Nunito Sans', system-ui, sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.tk-accordion-header:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--tk-cyan);
+}
+
+.tk-accordion-chevron {
+  color: var(--tk-text-muted);
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.tk-accordion-chevron.open {
+  transform: rotate(180deg);
+}
+
+.tk-accordion-body {
+  padding: 0 18px 16px;
+}
+
+/* ── Week Block ─────────────────────────────────────────────────────── */
+
+.tk-week {
+  background: var(--tk-bg-card);
+  border: 1px solid var(--tk-border);
+  border-radius: var(--tk-radius-lg);
+  margin-bottom: 12px;
+  overflow: hidden;
+  box-shadow: var(--tk-shadow-card);
+}
+
+.tk-week-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  width: 100%;
+  text-align: left;
+  color: var(--tk-text-primary);
+  font-family: 'Nunito Sans', system-ui, sans-serif;
+}
+
+.tk-week-header:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--tk-cyan);
+}
+
+.tk-week-accent {
+  width: 4px;
+  height: 32px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.tk-week-accent.future {
+  background: var(--tk-text-muted);
+}
+
+.tk-week-accent.current {
+  background: var(--tk-cyan);
+}
+
+.tk-week-accent.done {
+  background: var(--tk-green);
+}
+
+.tk-week-label {
+  font-weight: 700;
+  font-size: 0.95rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.tk-week-label span {
+  color: var(--tk-text-muted);
+  font-weight: 400;
+  font-size: 0.85rem;
+  margin-left: 8px;
+}
+
+.tk-week-completion {
+  font-family: 'Fira Code', 'Consolas', monospace;
+  font-size: 0.8rem;
+  color: var(--tk-text-muted);
+  flex-shrink: 0;
+}
+
+.tk-week-chevron {
+  color: var(--tk-text-muted);
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.tk-week-chevron.open {
+  transform: rotate(180deg);
+}
+
+.tk-week-body {
+  padding: 0 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ── Day Card ───────────────────────────────────────────────────────── */
+
+.tk-day {
+  background: var(--tk-bg-elevated);
+  border: 1px solid var(--tk-border);
+  border-radius: var(--tk-radius-md);
+  overflow: hidden;
+}
+
+.tk-day-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  width: 100%;
+  text-align: left;
+  color: var(--tk-text-primary);
+  font-family: 'Nunito Sans', system-ui, sans-serif;
+  font-size: 0.85rem;
+}
+
+.tk-day-row:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--tk-cyan);
+}
+
+.tk-checkbox {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: 2px solid var(--tk-cyan);
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 0;
+  color: var(--tk-bg-deep);
+}
+
+.tk-checkbox.checked {
+  background: var(--tk-cyan);
+}
+
+.tk-checkbox:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--tk-cyan);
+}
+
+.tk-day-label {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.tk-day-date {
+  color: var(--tk-text-muted);
+  font-family: 'Fira Code', 'Consolas', monospace;
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.tk-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+
+.tk-badge.completed {
+  background: var(--tk-green-dim);
+  color: var(--tk-green);
+}
+
+.tk-badge.scheduled {
+  background: var(--tk-cyan-dim);
+  color: var(--tk-cyan);
+}
+
+.tk-badge.missed {
+  background: var(--tk-red-dim);
+  color: var(--tk-red);
+}
+
+.tk-badge.rescheduled {
+  background: rgba(246, 201, 139, 0.15);
+  color: var(--tk-gold);
+}
+
+.tk-time-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-family: 'Fira Code', 'Consolas', monospace;
+  background: var(--tk-bg-card);
+  color: var(--tk-text-muted);
+  white-space: nowrap;
+}
+
+.tk-day-spacer {
+  flex: 1;
+}
+
+.tk-day-chevron {
+  color: var(--tk-text-muted);
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.tk-day-chevron.open {
+  transform: rotate(180deg);
+}
+
+/* ── Day Expanded Content ───────────────────────────────────────────── */
+
+.tk-day-content {
+  padding: 0 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.tk-phases {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tk-phase-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: var(--tk-bg-card);
+  border-radius: var(--tk-radius-sm);
+  font-size: 0.8rem;
+}
+
+.tk-phase-check {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  border: 2px solid var(--tk-cyan);
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 0;
+  color: var(--tk-bg-deep);
+}
+
+.tk-phase-check.checked {
+  background: var(--tk-cyan);
+}
+
+.tk-phase-check:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--tk-cyan);
+}
+
+.tk-phase-name {
+  font-weight: 600;
+  color: var(--tk-text-primary);
+  flex: 1;
+}
+
+.tk-phase-time {
+  font-family: 'Fira Code', 'Consolas', monospace;
+  font-size: 0.7rem;
+  color: var(--tk-text-muted);
+}
+
+/* ── Sub-sections inside day (daily plan, review topics, notes) ───── */
+
+.tk-subsection {
+  border-radius: var(--tk-radius-sm);
+  overflow: hidden;
+}
+
+.tk-subsection.gold {
+  border-left: 3px solid var(--tk-gold-border);
+  background: var(--tk-gold-bg);
+}
+
+.tk-subsection.blue {
+  border-left: 3px solid var(--tk-blue-border);
+  background: var(--tk-blue-bg);
+}
+
+.tk-subsection.neutral {
+  border-left: 3px solid var(--tk-border);
+  background: var(--tk-bg-card);
+}
+
+.tk-subsection.danger {
+  border-left: 3px dashed #f3b0b0;
+  background: rgba(90, 30, 10, 0.5);
+  margin-top: 10px;
+}
+
+.tk-subsection.info {
+  border-left: 3px solid #14344b;
+  background: #0f273a;
+}
+
+/* ── Curriculum Content ─────────────────────────────────────────────── */
+
+.tk-lesson-header {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.tk-lesson-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--tk-text);
+  margin: 0;
+}
+
+.tk-lesson-topic {
+  font-size: 0.75rem;
+  color: var(--tk-accent);
+  background: rgba(168, 218, 220, 0.1);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.tk-objectives {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 12px;
+}
+
+.tk-objectives li {
+  color: var(--tk-text-muted);
+  font-size: 0.8rem;
+  padding: 2px 0 2px 16px;
+  position: relative;
+}
+
+.tk-objectives li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--tk-accent);
+}
+
+.tk-section-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--tk-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 6px;
+}
+
+.tk-step-list {
+  padding-left: 20px;
+  margin: 0 0 14px;
+}
+
+.tk-step-list li {
+  color: var(--tk-text);
+  font-size: 0.82rem;
+  padding: 3px 0;
+  line-height: 1.5;
+}
+
+.tk-code-block {
+  background: #091722;
+  border: 1px solid var(--tk-border);
+  border-radius: 8px;
+  padding: 12px 14px;
+  overflow-x: auto;
+  margin: 8px 0;
+}
+
+.tk-code-block code {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 0.75rem;
+  color: #a8dadc;
+  white-space: pre;
+  line-height: 1.6;
+}
+
+.tk-success-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 8px;
+}
+
+.tk-success-list li {
+  color: #2a9d8f;
+  font-size: 0.82rem;
+  padding: 3px 0;
+}
+
+.tk-takeaway {
+  color: var(--tk-text-muted);
+  font-size: 0.8rem;
+  margin: 8px 0 0;
+  padding-top: 8px;
+  border-top: 1px solid var(--tk-border);
+}
+
+.tk-day-title {
+  color: var(--tk-text);
+  font-size: 0.8rem;
+  font-weight: 500;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tk-subsection-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  width: 100%;
+  text-align: left;
+  color: var(--tk-text-primary);
+  font-family: 'Nunito Sans', system-ui, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.tk-subsection-header:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--tk-cyan);
+}
+
+.tk-subsection-body {
+  padding: 0 14px 12px;
+  font-size: 0.8rem;
+  color: var(--tk-text-secondary);
+  line-height: 1.6;
+}
+
+.tk-notes-textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 10px;
+  background: var(--tk-bg-deep);
+  border: 1px solid var(--tk-border);
+  border-radius: var(--tk-radius-sm);
+  color: var(--tk-text-primary);
+  font-family: 'Nunito Sans', system-ui, sans-serif;
+  font-size: 0.8rem;
+  resize: vertical;
+}
+
+.tk-notes-textarea:focus {
+  outline: none;
+  border-color: var(--tk-cyan);
+}
+
+.tk-slider-group {
+  display: flex;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.tk-slider-item {
+  flex: 1;
+}
+
+.tk-slider-label {
+  font-size: 0.7rem;
+  color: var(--tk-text-muted);
+  margin-bottom: 4px;
+}
+
+.tk-slider-item input[type="range"] {
+  width: 100%;
+  accent-color: var(--tk-cyan);
+}
+
+/* ── Bottom Section ─────────────────────────────────────────────────── */
+
+.tk-bottom {
+  padding: 24px 32px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.tk-forecast-panel {
+  background: var(--tk-bg-card);
+  border: 1px solid var(--tk-border);
+  border-radius: var(--tk-radius-lg);
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  box-shadow: var(--tk-shadow-card);
+}
+
+.tk-forecast-gauge {
+  flex-shrink: 0;
+}
+
+.tk-forecast-info {
+  flex: 1;
+}
+
+.tk-forecast-title {
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--tk-text-primary);
+  margin: 0 0 8px;
+}
+
+.tk-forecast-desc {
+  font-size: 0.8rem;
+  color: var(--tk-text-muted);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.tk-alerts {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tk-alert {
+  background: var(--tk-bg-card);
+  border: 1px solid var(--tk-border);
+  border-left: 3px solid var(--tk-gold);
+  border-radius: var(--tk-radius-sm);
+  padding: 12px 16px;
+  font-size: 0.8rem;
+  color: var(--tk-text-secondary);
+}
+
+.tk-alert-type {
+  font-weight: 700;
+  color: var(--tk-gold);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-bottom: 2px;
+}
+
+.tk-export-row {
+  display: flex;
+  gap: 10px;
+}
+
+/* ── Curriculum Domain List ─────────────────────────────────────────── */
+
+.tk-domain-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tk-domain-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  font-size: 0.85rem;
+}
+
+.tk-domain-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.tk-domain-name {
+  flex: 1;
+  color: var(--tk-text-primary);
+  font-weight: 600;
+}
+
+.tk-domain-count {
+  font-family: 'Fira Code', 'Consolas', monospace;
+  font-size: 0.75rem;
+  color: var(--tk-text-muted);
+  background: var(--tk-bg-deep);
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+/* ── Review Queue ───────────────────────────────────────────────────── */
+
+.tk-review-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tk-review-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: var(--tk-bg-deep);
+  border-radius: var(--tk-radius-sm);
+  font-size: 0.8rem;
+}
+
+.tk-review-topic {
+  color: var(--tk-text-primary);
+  font-weight: 600;
+}
+
+.tk-review-urgency {
+  font-family: 'Fira Code', 'Consolas', monospace;
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.tk-review-urgency.high {
+  background: var(--tk-red-dim);
+  color: var(--tk-red);
+}
+
+.tk-review-urgency.medium {
+  background: rgba(246, 201, 139, 0.15);
+  color: var(--tk-gold);
+}
+
+.tk-review-urgency.low {
+  background: var(--tk-green-dim);
+  color: var(--tk-green);
+}
+
+/* ── Responsive ─────────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .tk-header {
+    padding: 16px 16px 12px;
+  }
+
+  .tk-stats-bar {
+    grid-template-columns: 1fr;
+    padding: 0 16px;
+  }
+
+  .tk-section {
+    padding: 0 16px;
+  }
+
+  .tk-bottom {
+    padding: 24px 16px 48px;
+  }
+
+  .tk-forecast-panel {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .tk-header-title {
+    font-size: 1.5rem;
+  }
+}
