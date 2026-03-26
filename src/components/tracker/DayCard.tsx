@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { ChevronDown, Check, Clock } from 'lucide-react';
 import type { Session, SessionPhase } from '../../types/models';
-import { getSessionPhases, completePhase, completeSession } from '../../lib/tauri-bridge';
+import { getSessionPhases, completePhase, completeSession, uncompleteSession } from '../../lib/tauri-bridge';
 import { allLessons } from '../../data/curriculum';
 
 interface DayCardProps {
@@ -12,8 +12,8 @@ interface DayCardProps {
 
 const PHASE_META: Record<string, { label: string; defaultMin: number }> = {
   retrieval: { label: 'Retrieval Practice', defaultMin: 5 },
-  learning: { label: 'New Learning', defaultMin: 25 },
-  micro_task: { label: 'Micro-Task', defaultMin: 12 },
+  learning: { label: 'New Learning', defaultMin: 12 },
+  micro_task: { label: 'Micro-Task', defaultMin: 8 },
   reflection: { label: 'Reflection', defaultMin: 5 },
 };
 
@@ -64,10 +64,13 @@ export function DayCard({ session, dayIndex, onSessionUpdate }: DayCardProps) {
 
   const handleCheckboxClick = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (isComplete) return;
     try {
-      const totalMin = session.time_spent_min ?? 47;
-      await completeSession(session.id, totalMin, 7, confidence, energy, notes || null);
+      if (isComplete) {
+        await uncompleteSession(session.id);
+      } else {
+        const totalMin = session.time_spent_min ?? 30;
+        await completeSession(session.id, totalMin, 7, confidence, energy, notes || null);
+      }
       onSessionUpdate?.();
     } catch {
       // toast handler will catch
@@ -88,7 +91,15 @@ export function DayCard({ session, dayIndex, onSessionUpdate }: DayCardProps) {
   };
 
   const completedPhaseKeys = new Set(phases.map((p) => p.phase));
-  const timeDisplay = session.time_spent_min ? `${session.time_spent_min} min` : '47 min';
+  const DOMAIN_COLORS: Record<string, string> = {
+    'power-bi': '#F2C811',
+    'business-intelligence': '#7C6BF0',
+    'bi': '#7C6BF0',
+    'operations': '#FF6B6B',
+    'logistics': '#4ECDC4',
+  };
+  const domainColor = (lesson?.domainSlug && DOMAIN_COLORS[lesson.domainSlug]) || 'var(--tk-cyan)';
+  const timeDisplay = session.time_spent_min ? `${session.time_spent_min} min` : '30 min';
 
   return (
     <div className="tk-day">
@@ -96,11 +107,12 @@ export function DayCard({ session, dayIndex, onSessionUpdate }: DayCardProps) {
         <button
           className={`tk-checkbox${isComplete ? ' checked' : ''}`}
           onClick={handleCheckboxClick}
-          aria-label={isComplete ? 'Session completed' : 'Mark session complete'}
+          aria-label={isComplete ? 'Mark session incomplete' : 'Mark session complete'}
         >
           {isComplete && <Check size={12} strokeWidth={3} />}
         </button>
 
+        <div className="tk-domain-dot" style={{ background: domainColor, width: 8, height: 8, borderRadius: '50%', flexShrink: 0 }} />
         <span className="tk-day-label">Day {dayIndex}</span>
         {lesson && <span className="tk-day-title">{lesson.title}</span>}
         <span className="tk-day-date">{formatDate(session.date)}</span>

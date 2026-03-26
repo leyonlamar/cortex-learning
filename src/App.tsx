@@ -12,11 +12,17 @@ import "./themes/luxury.css";
 import "./themes/nasa.css";
 import "./themes/studyhall.css";
 
+import { AppShell } from './components/layout/AppShell';
 import { TrackerPage } from './components/tracker/TrackerPage';
+import { TodayView } from './components/session/TodayView';
+import { WeeklyView } from './components/weekly/WeeklyView';
+import { TimelineView } from './components/timeline/TimelineView';
+import { AnalyticsView } from './components/dashboard/AnalyticsView';
+import { ForecastView } from './components/forecast/ForecastView';
+import { QuizView } from './components/quiz/QuizView';
 import { SettingsView } from './components/settings/SettingsView';
 import { OnboardingView } from './components/onboarding/OnboardingView';
 import { UserPickerView } from './components/onboarding/UserPickerView';
-import { Modal } from './components/shared/Modal';
 import { useTheme } from './hooks/useTheme';
 import { useUser } from './hooks/useUser';
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
@@ -32,18 +38,12 @@ type AppScreen = 'loading' | 'picker' | 'onboarding' | 'app';
 function AppInner() {
   const { user, loading: userLoading, create, switchUser, logout } = useUser();
   const { theme, switchTheme, themes } = useTheme(user?.id ?? null, user?.theme ?? 'glass');
-  const [activeView, setActiveView] = useState<ViewId>('today');
+  const [activeView, setActiveView] = useState<ViewId>('dashboard');
   const [screen, setScreen] = useState<AppScreen>('loading');
   const [existingUsers, setExistingUsers] = useState<User[]>([]);
-  const [settingsOpen, setSettingsOpen] = useState(false);
 
   useKeyboardShortcuts({
-    onNavigate: (view: ViewId) => {
-      if (view === 'settings') {
-        setSettingsOpen(true);
-      }
-      setActiveView(view);
-    },
+    onNavigate: (view: ViewId) => setActiveView(view),
     activeView,
     themes,
     currentTheme: theme,
@@ -98,30 +98,54 @@ function AppInner() {
     );
   }
 
-  return (
-    <>
-      <TrackerPage onOpenSettings={() => setSettingsOpen(true)} />
+  const renderView = () => {
+    switch (activeView) {
+      case 'dashboard':
+        return <TrackerPage onOpenSettings={() => setActiveView('settings')} />;
+      case 'today':
+        return <div className="p-6"><TodayView onNavigateToQuiz={() => setActiveView('quiz')} /></div>;
+      case 'weekly':
+        return <div className="p-6"><WeeklyView /></div>;
+      case 'timeline':
+        return <div className="p-6"><TimelineView /></div>;
+      case 'analytics':
+        return <div className="p-6"><AnalyticsView /></div>;
+      case 'forecast':
+        return <div className="p-6"><ForecastView /></div>;
+      case 'quiz':
+        return <div className="p-6"><QuizView /></div>;
+      case 'settings':
+        return (
+          <div className="p-6">
+            <SettingsView
+              theme={theme}
+              onThemeSwitch={switchTheme}
+              userName={user?.name ?? null}
+              onCreateUser={(name) => create(name, theme)}
+              onSwitchProfile={async () => {
+                logout();
+                const users = await listUsers();
+                setExistingUsers(users);
+                setScreen(users.length === 0 ? 'onboarding' : 'picker');
+              }}
+            />
+          </div>
+        );
+      default:
+        return <TrackerPage onOpenSettings={() => setActiveView('settings')} />;
+    }
+  };
 
-      <Modal
-        open={settingsOpen}
-        onClose={() => setSettingsOpen(false)}
-        title="Settings"
-      >
-        <SettingsView
-          theme={theme}
-          onThemeSwitch={switchTheme}
-          userName={user?.name ?? null}
-          onCreateUser={(name) => create(name, theme)}
-          onSwitchProfile={async () => {
-            setSettingsOpen(false);
-            logout();
-            const users = await listUsers();
-            setExistingUsers(users);
-            setScreen(users.length === 0 ? 'onboarding' : 'picker');
-          }}
-        />
-      </Modal>
-    </>
+  return (
+    <AppShell
+      activeView={activeView}
+      onNavigate={setActiveView}
+      theme={theme}
+      onThemeSwitch={switchTheme}
+      themes={themes}
+    >
+      {renderView()}
+    </AppShell>
   );
 }
 

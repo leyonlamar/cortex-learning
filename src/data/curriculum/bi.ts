@@ -1,7 +1,7 @@
 import type { LessonContent } from './types';
 
 function bi(day: number, topic: string, topicName: string, title: string, obj: string[], steps: string[], hint: string, hintCode: string, solDesc: string, solCode: string, success: string[], takeaway: string): LessonContent {
-  return { topicSlug: topic, topicName, domainSlug: 'business-intelligence', dayNumber: day, title, duration: 47, objectives: obj, steps: steps.map(s => ({ instruction: s })), hint: { description: hint, code: hintCode }, fullSolution: { description: solDesc, code: solCode }, successCriteria: success, keyTakeaway: takeaway };
+  return { topicSlug: topic, topicName, domainSlug: 'business-intelligence', dayNumber: day, title, duration: 30, objectives: obj, steps: steps.map(s => ({ instruction: s })), hint: { description: hint, code: hintCode }, fullSolution: { description: solDesc, code: solCode }, successCriteria: success, keyTakeaway: takeaway };
 }
 
 export const biLessons: LessonContent[] = [

@@ -1,5 +1,5 @@
 import {
-  CalendarCheck, CalendarDays, GanttChart,
+  LayoutDashboard, CalendarCheck, CalendarDays, GanttChart,
   BarChart3, TrendingUp, BookOpen, Settings, ChevronLeft, ChevronRight,
 } from 'lucide-react';
 import type { ViewId } from '../../types/routes';
@@ -13,6 +13,7 @@ interface SidebarProps {
 }
 
 const ICON_MAP: Record<string, React.ElementType> = {
+  'layout-dashboard': LayoutDashboard,
   'calendar-check': CalendarCheck,
   'calendar-days': CalendarDays,
   'gantt-chart': GanttChart,
@@ -23,8 +24,9 @@ const ICON_MAP: Record<string, React.ElementType> = {
 };
 
 const NAV_ITEMS: { id: ViewId; label: string; icon: string }[] = [
-  { id: 'quiz', label: 'Curriculum', icon: 'book-open' },
+  { id: 'dashboard', label: 'Dashboard', icon: 'layout-dashboard' },
   { id: 'today', label: 'Today', icon: 'calendar-check' },
+  { id: 'quiz', label: 'Curriculum', icon: 'book-open' },
   { id: 'weekly', label: 'Weekly', icon: 'calendar-days' },
   { id: 'timeline', label: 'Timeline', icon: 'gantt-chart' },
   { id: 'analytics', label: 'Analytics', icon: 'bar-chart-3' },
@@ -61,7 +63,7 @@ export function Sidebar({ activeView, onNavigate, collapsed, onToggle, attendanc
             className="text-sm font-bold truncate tracking-tight"
             style={{ fontFamily: 'var(--font-display)', color: 'var(--text-primary)' }}
           >
-            Learning OS
+            Cortex
           </span>
         )}
       </div>

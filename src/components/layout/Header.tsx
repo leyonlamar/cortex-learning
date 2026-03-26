@@ -11,12 +11,13 @@ interface HeaderProps {
 }
 
 const VIEW_LABELS: Record<ViewId, string> = {
+  dashboard: 'Dashboard',
   today: 'Today',
   weekly: 'Weekly Review',
   timeline: 'Timeline',
   analytics: 'Analytics',
   forecast: 'Forecast',
-  quiz: 'Quiz',
+  quiz: 'Curriculum',
   settings: 'Settings',
 };
 

@@ -52,10 +52,12 @@ export function AppShell({
           themes={themes}
         />
         <main
-          className="flex-1 overflow-y-auto p-6"
+          className="flex-1 overflow-y-auto"
           style={{ background: 'var(--bg-primary)' }}
         >
-          {children}
+          <div key={activeView} className="animate-view-enter" style={{ minHeight: '100%' }}>
+            {children}
+          </div>
         </main>
         <StatusBar
           weekLabel={weekLabel}

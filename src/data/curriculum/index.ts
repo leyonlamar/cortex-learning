@@ -1,8 +1,20 @@
 import type { LessonContent } from './types';
+import { powerBiLessons } from './power-bi';
 import { biLessons } from './bi';
+import { operationsLessons } from './operations';
 import { logisticsLessons } from './logistics';
 
-const allLessons: LessonContent[] = [...biLessons, ...logisticsLessons];
+// ── Interleave 4 domains round-robin ────────────────────────────────────
+// Each week of 5 days covers multiple domains: PBI, BI, OPS, LOG, PBI, BI, ...
+// This maximizes retention through spaced interleaving.
+const domainArrays = [powerBiLessons, biLessons, operationsLessons, logisticsLessons];
+const allLessons: LessonContent[] = [];
+const maxLen = Math.max(...domainArrays.map((a) => a.length));
+for (let i = 0; i < maxLen; i++) {
+  for (const arr of domainArrays) {
+    if (i < arr.length) allLessons.push(arr[i]);
+  }
+}
 
 const lessonMap = new Map<string, LessonContent>();
 for (const l of allLessons) {
@@ -24,5 +36,5 @@ export function getLessonsByDomain(domainSlug: string): LessonContent[] {
   return allLessons.filter((l) => l.domainSlug === domainSlug);
 }
 
-export { allLessons, biLessons, logisticsLessons };
+export { allLessons, powerBiLessons, biLessons, operationsLessons, logisticsLessons };
 export type { LessonContent } from './types';

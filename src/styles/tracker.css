@@ -4,40 +4,43 @@
 ──────────────────────────────────────────────────────────────────────── */
 
 .tracker-page {
-  --tk-bg-deep: #091722;
-  --tk-bg-base: #0b1d2a;
-  --tk-bg-card: #142a3b;
-  --tk-bg-elevated: #1f3a52;
-  --tk-bg-input: #0f273a;
+  /* ── Theme-aware variable mapping ──────────────────────────────────────
+     All --tk-* variables now derive from the active [data-theme].
+     Every theme (glass, cyberpunk, nasa, etc.) styles the tracker natively.
+  ──────────────────────────────────────────────────────────────────────── */
+  --tk-bg-deep: var(--bg-primary);
+  --tk-bg-base: var(--bg-secondary);
+  --tk-bg-card: var(--bg-surface);
+  --tk-bg-elevated: var(--bg-tertiary);
+  --tk-bg-input: var(--bg-secondary);
 
-  --tk-text-primary: #f8f9fb;
-  --tk-text-secondary: #d5dbe6;
-  --tk-text-muted: #7a8ea0;
+  --tk-text-primary: var(--text-primary);
+  --tk-text-secondary: var(--text-secondary);
+  --tk-text-muted: var(--text-muted);
 
-  --tk-cyan: #a8dadc;
-  --tk-cyan-dim: rgba(168, 218, 220, 0.15);
-  --tk-green: #56c596;
-  --tk-green-dim: rgba(86, 197, 150, 0.15);
-  --tk-gold: #f6c98b;
-  --tk-gold-bg: rgba(82, 56, 20, 0.55);
-  --tk-gold-border: #f6c98b;
-  --tk-blue-border: #14344b;
-  --tk-blue-bg: #0f273a;
-  --tk-red: #ff6b6b;
-  --tk-red-dim: rgba(255, 107, 107, 0.15);
+  --tk-cyan: var(--accent-primary);
+  --tk-cyan-dim: color-mix(in srgb, var(--accent-primary) 15%, transparent);
+  --tk-green: var(--accent-success);
+  --tk-green-dim: color-mix(in srgb, var(--accent-success) 15%, transparent);
+  --tk-gold: var(--accent-warning);
+  --tk-gold-bg: color-mix(in srgb, var(--accent-warning) 18%, transparent);
+  --tk-gold-border: var(--accent-warning);
+  --tk-blue-border: var(--border-color);
+  --tk-blue-bg: var(--bg-secondary);
+  --tk-red: var(--accent-danger);
+  --tk-red-dim: color-mix(in srgb, var(--accent-danger) 15%, transparent);
 
-  --tk-border: rgba(168, 218, 220, 0.1);
-  --tk-radius-lg: 16px;
+  --tk-border: var(--border-color);
+  --tk-radius-lg: var(--border-radius);
   --tk-radius-md: 12px;
   --tk-radius-sm: 8px;
-  --tk-shadow-card: 0 20px 40px rgba(0, 0, 0, 0.35);
-  --tk-shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.2);
+  --tk-shadow-card: var(--shadow-lg);
+  --tk-shadow-sm: var(--shadow-sm);
 
-  background: linear-gradient(180deg, var(--tk-bg-base) 0%, var(--tk-bg-deep) 100%);
-  color: var(--tk-text-primary);
-  font-family: 'Nunito Sans', system-ui, sans-serif;
-  min-height: 100vh;
-  overflow-y: auto;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  min-height: 100%;
   overflow-x: hidden;
 }
 
@@ -62,7 +65,7 @@
   position: sticky;
   top: 0;
   z-index: 40;
-  background: linear-gradient(180deg, var(--tk-bg-base) 0%, rgba(11, 29, 42, 0.95) 100%);
+  background: color-mix(in srgb, var(--tk-bg-base) 97%, transparent);
   backdrop-filter: blur(12px);
   padding: 24px 32px 16px;
   border-bottom: 1px solid var(--tk-border);
@@ -76,7 +79,7 @@
 }
 
 .tk-header-title {
-  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  font-family: var(--font-display);
   font-size: 2rem;
   font-weight: 800;
   color: var(--tk-text-primary);
@@ -88,7 +91,7 @@
   font-size: 0.875rem;
   color: var(--tk-text-muted);
   margin: 4px 0 0;
-  font-family: 'Fira Code', 'Consolas', monospace;
+  font-family: var(--font-code);
 }
 
 .tk-header-actions {
@@ -104,7 +107,7 @@
   padding: 8px 14px;
   font-size: 0.8rem;
   font-weight: 600;
-  font-family: 'Nunito Sans', system-ui, sans-serif;
+  font-family: var(--font-body);
   color: var(--tk-text-secondary);
   background: var(--tk-bg-card);
   border: 1px solid var(--tk-border);
@@ -168,7 +171,7 @@
 }
 
 .tk-stat-value {
-  font-family: 'Fira Code', 'Consolas', monospace;
+  font-family: var(--font-code);
   font-size: 1.75rem;
   font-weight: 700;
   color: var(--tk-text-primary);
@@ -190,7 +193,7 @@
 }
 
 .tk-section-title {
-  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  font-family: var(--font-display);
   font-size: 1.125rem;
   font-weight: 700;
   color: var(--tk-text-primary);
@@ -219,7 +222,7 @@
   width: 100%;
   text-align: left;
   color: var(--tk-text-primary);
-  font-family: 'Nunito Sans', system-ui, sans-serif;
+  font-family: var(--font-body);
   font-size: 0.9rem;
   font-weight: 600;
 }
@@ -265,7 +268,7 @@
   width: 100%;
   text-align: left;
   color: var(--tk-text-primary);
-  font-family: 'Nunito Sans', system-ui, sans-serif;
+  font-family: var(--font-body);
 }
 
 .tk-week-header:focus-visible {
@@ -307,7 +310,7 @@
 }
 
 .tk-week-completion {
-  font-family: 'Fira Code', 'Consolas', monospace;
+  font-family: var(--font-code);
   font-size: 0.8rem;
   color: var(--tk-text-muted);
   flex-shrink: 0;
@@ -350,7 +353,7 @@
   width: 100%;
   text-align: left;
   color: var(--tk-text-primary);
-  font-family: 'Nunito Sans', system-ui, sans-serif;
+  font-family: var(--font-body);
   font-size: 0.85rem;
 }
 
@@ -390,7 +393,7 @@
 
 .tk-day-date {
   color: var(--tk-text-muted);
-  font-family: 'Fira Code', 'Consolas', monospace;
+  font-family: var(--font-code);
   font-size: 0.75rem;
   white-space: nowrap;
 }
@@ -434,7 +437,7 @@
   padding: 2px 8px;
   border-radius: 999px;
   font-size: 0.7rem;
-  font-family: 'Fira Code', 'Consolas', monospace;
+  font-family: var(--font-code);
   background: var(--tk-bg-card);
   color: var(--tk-text-muted);
   white-space: nowrap;
@@ -510,7 +513,7 @@
 }
 
 .tk-phase-time {
-  font-family: 'Fira Code', 'Consolas', monospace;
+  font-family: var(--font-code);
   font-size: 0.7rem;
   color: var(--tk-text-muted);
 }
@@ -538,14 +541,14 @@
 }
 
 .tk-subsection.danger {
-  border-left: 3px dashed #f3b0b0;
-  background: rgba(90, 30, 10, 0.5);
+  border-left: 3px dashed var(--tk-red);
+  background: var(--tk-red-dim);
   margin-top: 10px;
 }
 
 .tk-subsection.info {
-  border-left: 3px solid #14344b;
-  background: #0f273a;
+  border-left: 3px solid var(--tk-blue-border);
+  background: var(--tk-blue-bg);
 }
 
 /* ── Curriculum Content ─────────────────────────────────────────────── */
@@ -560,14 +563,14 @@
 .tk-lesson-title {
   font-size: 1rem;
   font-weight: 600;
-  color: var(--tk-text);
+  color: var(--tk-text-primary);
   margin: 0;
 }
 
 .tk-lesson-topic {
   font-size: 0.75rem;
-  color: var(--tk-accent);
-  background: rgba(168, 218, 220, 0.1);
+  color: var(--tk-cyan);
+  background: var(--tk-cyan-dim);
   padding: 2px 8px;
   border-radius: 4px;
 }
@@ -589,7 +592,7 @@
   content: '→';
   position: absolute;
   left: 0;
-  color: var(--tk-accent);
+  color: var(--tk-cyan);
 }
 
 .tk-section-label {
@@ -607,14 +610,14 @@
 }
 
 .tk-step-list li {
-  color: var(--tk-text);
+  color: var(--tk-text-primary);
   font-size: 0.82rem;
   padding: 3px 0;
   line-height: 1.5;
 }
 
 .tk-code-block {
-  background: #091722;
+  background: var(--tk-bg-deep);
   border: 1px solid var(--tk-border);
   border-radius: 8px;
   padding: 12px 14px;
@@ -623,9 +626,9 @@
 }
 
 .tk-code-block code {
-  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-family: var(--font-code);
   font-size: 0.75rem;
-  color: #a8dadc;
+  color: var(--tk-cyan);
   white-space: pre;
   line-height: 1.6;
 }
@@ -637,7 +640,7 @@
 }
 
 .tk-success-list li {
-  color: #2a9d8f;
+  color: var(--tk-green);
   font-size: 0.82rem;
   padding: 3px 0;
 }
@@ -651,7 +654,7 @@
 }
 
 .tk-day-title {
-  color: var(--tk-text);
+  color: var(--tk-text-primary);
   font-size: 0.8rem;
   font-weight: 500;
   flex: 1;
@@ -671,7 +674,7 @@
   width: 100%;
   text-align: left;
   color: var(--tk-text-primary);
-  font-family: 'Nunito Sans', system-ui, sans-serif;
+  font-family: var(--font-body);
   font-size: 0.8rem;
   font-weight: 600;
 }
@@ -696,7 +699,7 @@
   border: 1px solid var(--tk-border);
   border-radius: var(--tk-radius-sm);
   color: var(--tk-text-primary);
-  font-family: 'Nunito Sans', system-ui, sans-serif;
+  font-family: var(--font-body);
   font-size: 0.8rem;
   resize: vertical;
 }
@@ -756,7 +759,7 @@
 }
 
 .tk-forecast-title {
-  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  font-family: var(--font-display);
   font-size: 1rem;
   font-weight: 700;
   color: var(--tk-text-primary);
@@ -830,7 +833,7 @@
 }
 
 .tk-domain-count {
-  font-family: 'Fira Code', 'Consolas', monospace;
+  font-family: var(--font-code);
   font-size: 0.75rem;
   color: var(--tk-text-muted);
   background: var(--tk-bg-deep);
@@ -862,7 +865,7 @@
 }
 
 .tk-review-urgency {
-  font-family: 'Fira Code', 'Consolas', monospace;
+  font-family: var(--font-code);
   font-size: 0.7rem;
   padding: 2px 8px;
   border-radius: 999px;
