@@ -159,22 +159,16 @@ export function TodayView({ onNavigateToQuiz: _onNavigateToQuiz }: TodayViewProp
   // No session for today — show contextual message based on date
   if (!loading && !session) {
     const todayDate = new Date();
-    const todayStr = todayDate.toISOString().slice(0, 10);
-    const programStart = '2026-03-03';
-    const programEnd = '2026-12-19';
     const dayOfWeek = todayDate.getDay(); // 0=Sun, 6=Sat
+
+    // Derive program end from calendar data
+    const programEnd = calendar?.weeks[calendar.weeks.length - 1]?.week.end_date;
 
     let noSessionMessage: string;
     let noSessionSub: string | null = null;
     let showCatchUp = false;
 
-    if (todayStr < programStart) {
-      const daysUntil = Math.ceil(
-        (new Date(programStart).getTime() - todayDate.getTime()) / (1000 * 60 * 60 * 24)
-      );
-      noSessionMessage = 'Cortex begins March 3, 2026';
-      noSessionSub = `${daysUntil} day${daysUntil !== 1 ? 's' : ''} to go`;
-    } else if (todayStr > programEnd) {
+    if (programEnd && todayDate.toISOString().slice(0, 10) > programEnd) {
       noSessionMessage = "Congratulations! You've completed the 43-week program";
       noSessionSub = 'Your learning journey is archived below.';
     } else if (dayOfWeek === 0 || dayOfWeek === 6) {

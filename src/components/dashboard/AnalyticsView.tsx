@@ -45,7 +45,7 @@ export function AnalyticsView() {
   }, [loadCalendar, fetchAlerts]);
 
   useEffect(() => {
-    if (!calendar) return;
+    if (!calendar || !Array.isArray(calendar.weeks)) return;
     const data = buildChartData(calendar.weeks);
     setChartData(data);
 
@@ -103,7 +103,7 @@ export function AnalyticsView() {
   };
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4">
       <h2
         className="text-xl font-bold"
         style={{ fontFamily: 'var(--font-display)', color: 'var(--text-primary)' }}
@@ -112,7 +112,7 @@ export function AnalyticsView() {
       </h2>
 
       {/* KPI Row */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <KPICard label="Total Hours" value={`${Math.round(totalHours)}h`} delta={null} deltaPositive sparkData={recentHours} />
         <KPICard label="Quiz Avg" value={`${quizAvg}%`} delta={null} deltaPositive sparkData={recentQuiz} />
         <KPICard label="Attendance" value={`${attendanceRate}%`} delta={null} deltaPositive sparkData={recentAttendance} />
@@ -120,7 +120,7 @@ export function AnalyticsView() {
       </div>
 
       {/* Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
         <Card>
           <h3
             className="text-sm font-semibold mb-3"
@@ -128,7 +128,7 @@ export function AnalyticsView() {
           >
             Cumulative Hours
           </h3>
-          <div className="h-48">
+          <div className="h-36">
             {chartData.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={chartData}>
@@ -154,7 +154,7 @@ export function AnalyticsView() {
           >
             Quiz Scores
           </h3>
-          <div className="h-48">
+          <div className="h-36">
             {quizScores.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={chartData.filter((d) => d.quizScore !== null)}>
@@ -180,7 +180,7 @@ export function AnalyticsView() {
           >
             Weekly Hours
           </h3>
-          <div className="h-48">
+          <div className="h-36">
             {chartData.some((d) => d.hours > 0) ? (
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={chartData}>
@@ -206,7 +206,7 @@ export function AnalyticsView() {
           >
             Attendance Trend
           </h3>
-          <div className="h-48">
+          <div className="h-36">
             {chartData.some((d) => d.attendance > 0) ? (
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={chartData}>
@@ -227,7 +227,9 @@ export function AnalyticsView() {
       </div>
 
       {/* Success Criteria */}
-      <SuccessCriteriaCard criteria={criteria} />
+      <div className="mt-1">
+        <SuccessCriteriaCard criteria={criteria} />
+      </div>
     </div>
   );
 }

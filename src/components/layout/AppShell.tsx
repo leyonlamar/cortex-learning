@@ -3,7 +3,7 @@ import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 import { StatusBar } from './StatusBar';
 import type { ViewId } from '../../types/routes';
-import type { Theme } from '../../types/models';
+import type { Theme, XpState } from '../../types/models';
 
 interface AppShellProps {
   activeView: ViewId;
@@ -16,6 +16,8 @@ interface AppShellProps {
   weekLabel?: string;
   dayLabel?: string;
   nextQuizLabel?: string | null;
+  xpState?: XpState | null;
+  onOpenCommandPalette?: () => void;
   children: ReactNode;
 }
 
@@ -30,6 +32,8 @@ export function AppShell({
   weekLabel = 'W01',
   dayLabel = '',
   nextQuizLabel = null,
+  xpState,
+  onOpenCommandPalette,
   children,
 }: AppShellProps) {
   const [collapsed, setCollapsed] = useState(false);
@@ -42,6 +46,8 @@ export function AppShell({
         collapsed={collapsed}
         onToggle={() => setCollapsed((c) => !c)}
         attendanceRate={attendanceRate}
+        xpState={xpState}
+        onOpenCommandPalette={onOpenCommandPalette}
       />
       <div className="flex flex-col flex-1 min-w-0">
         <Header

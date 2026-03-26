@@ -18,6 +18,10 @@ const VIEW_LABELS: Record<ViewId, string> = {
   analytics: 'Analytics',
   forecast: 'Forecast',
   quiz: 'Curriculum',
+  notes: 'Notes',
+  focus: 'Focus',
+  flashcards: 'Flashcards',
+  achievements: 'Achievements',
   settings: 'Settings',
 };
 

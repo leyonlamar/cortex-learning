@@ -10,7 +10,7 @@ interface WeekBlockProps {
 }
 
 function getWeekStatus(weekData: WeekWithSessions): 'done' | 'current' | 'future' {
-  const { sessions } = weekData;
+  const sessions = weekData.sessions ?? [];
   const now = new Date();
   const start = new Date(weekData.week.start_date + 'T00:00:00');
   const end = new Date(weekData.week.end_date + 'T23:59:59');
@@ -28,7 +28,8 @@ export function WeekBlock({ weekData, forceOpen, onSessionUpdate }: WeekBlockPro
   const status = getWeekStatus(weekData);
   const [open, setOpen] = useState(forceOpen ?? status === 'current');
 
-  const { week, sessions } = weekData;
+  const { week } = weekData;
+  const sessions = weekData.sessions ?? [];
   const completed = sessions.filter((s) => s.status === 'completed').length;
   const total = sessions.length;
 
@@ -54,7 +55,7 @@ export function WeekBlock({ weekData, forceOpen, onSessionUpdate }: WeekBlockPro
             <DayCard
               key={session.id}
               session={session}
-              dayIndex={idx + 1}
+              dayIndex={(week.week_num - 1) * 5 + idx + 1}
               onSessionUpdate={onSessionUpdate}
             />
           ))}

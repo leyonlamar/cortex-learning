@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import "./index.css";
 import "./styles/motion.css";
 import "./styles/completion-animations.css";
@@ -23,14 +23,19 @@ import { QuizView } from './components/quiz/QuizView';
 import { SettingsView } from './components/settings/SettingsView';
 import { OnboardingView } from './components/onboarding/OnboardingView';
 import { UserPickerView } from './components/onboarding/UserPickerView';
+import { NotesView } from './components/notes/NotesView';
+import { FocusView } from './components/focus/FocusView';
+import { FlashcardsView } from './components/flashcards/FlashcardsView';
+import { AchievementsView } from './components/achievements/AchievementsView';
+import { CommandPalette } from './components/command-palette/CommandPalette';
 import { useTheme } from './hooks/useTheme';
 import { useUser } from './hooks/useUser';
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
 import { ToastContext, useToastState } from './hooks/useToast';
 import { Toast } from './components/shared/Toast';
-import { registerToastHandler, listUsers } from './lib/tauri-bridge';
+import { registerToastHandler, listUsers, getXpState } from './lib/tauri-bridge';
 import type { ViewId } from './types/routes';
-import type { User } from './types/models';
+import type { User, XpState } from './types/models';
 import { Spinner } from './components/shared';
 
 type AppScreen = 'loading' | 'picker' | 'onboarding' | 'app';
@@ -41,6 +46,30 @@ function AppInner() {
   const [activeView, setActiveView] = useState<ViewId>('dashboard');
   const [screen, setScreen] = useState<AppScreen>('loading');
   const [existingUsers, setExistingUsers] = useState<User[]>([]);
+  const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
+  const [xpState, setXpState] = useState<XpState | null>(null);
+
+  // Load XP state
+  const loadXp = useCallback(async () => {
+    try {
+      const xp = await getXpState();
+      setXpState(xp);
+    } catch { /* xp not available */ }
+  }, []);
+
+  useEffect(() => { if (user) loadXp(); }, [user, loadXp]);
+
+  // Ctrl+K command palette
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setCommandPaletteOpen((o) => !o);
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   useKeyboardShortcuts({
     onNavigate: (view: ViewId) => setActiveView(view),
@@ -114,6 +143,14 @@ function AppInner() {
         return <div className="p-6"><ForecastView /></div>;
       case 'quiz':
         return <div className="p-6"><QuizView /></div>;
+      case 'notes':
+        return <div className="p-6"><NotesView /></div>;
+      case 'focus':
+        return <div className="p-6"><FocusView /></div>;
+      case 'flashcards':
+        return <div className="p-6"><FlashcardsView /></div>;
+      case 'achievements':
+        return <div className="p-6"><AchievementsView /></div>;
       case 'settings':
         return (
           <div className="p-6">
@@ -137,15 +174,24 @@ function AppInner() {
   };
 
   return (
-    <AppShell
-      activeView={activeView}
-      onNavigate={setActiveView}
-      theme={theme}
-      onThemeSwitch={switchTheme}
-      themes={themes}
-    >
-      {renderView()}
-    </AppShell>
+    <>
+      <AppShell
+        activeView={activeView}
+        onNavigate={setActiveView}
+        theme={theme}
+        onThemeSwitch={switchTheme}
+        themes={themes}
+        xpState={xpState}
+        onOpenCommandPalette={() => setCommandPaletteOpen(true)}
+      >
+        {renderView()}
+      </AppShell>
+      <CommandPalette
+        open={commandPaletteOpen}
+        onClose={() => setCommandPaletteOpen(false)}
+        onNavigate={(view) => { setActiveView(view); setCommandPaletteOpen(false); }}
+      />
+    </>
   );
 }
 

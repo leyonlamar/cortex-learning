@@ -16,7 +16,7 @@ export function ForecastView() {
   }, [loadCalendar]);
 
   useEffect(() => {
-    if (!calendar) return;
+    if (!calendar || !Array.isArray(calendar.weeks)) return;
     const completed = calendar.weeks.filter(
       (ws) => ws.aggregate && ws.aggregate.total_hours && ws.aggregate.total_hours > 0,
     ).length;

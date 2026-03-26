@@ -215,3 +215,73 @@ export interface TopicMastery {
   ci_lower: number;
   ci_upper: number;
 }
+
+// ── Notes ──────────────────────────────────────────────────────────────
+
+export interface Note {
+  id: string;
+  title: string;
+  content: string;
+  tags: string[];
+  domain_slug: string | null;
+  topic_slug: string | null;
+  session_id: string | null;
+  pinned: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+// ── Flashcards ─────────────────────────────────────────────────────────
+
+export interface Flashcard {
+  id: string;
+  front: string;
+  back: string;
+  domain_slug: string;
+  topic_slug: string;
+  difficulty: number;
+  interval_days: number;
+  ease_factor: number;
+  next_review: string;
+  review_count: number;
+  last_reviewed: string | null;
+}
+
+export type FlashcardRating = 'again' | 'hard' | 'good' | 'easy';
+
+// ── Achievements ───────────────────────────────────────────────────────
+
+export interface Achievement {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  category: 'streak' | 'mastery' | 'milestone' | 'special';
+  xp: number;
+  unlocked: boolean;
+  unlocked_at: string | null;
+  progress: number;
+  target: number;
+}
+
+export interface XpState {
+  total_xp: number;
+  level: number;
+  xp_to_next: number;
+  current_streak: number;
+  longest_streak: number;
+}
+
+// ── Focus Timer ────────────────────────────────────────────────────────
+
+export type TimerMode = 'work' | 'short_break' | 'long_break';
+
+export interface FocusSession {
+  id: string;
+  started_at: string;
+  completed_at: string | null;
+  mode: TimerMode;
+  duration_min: number;
+  completed: boolean;
+  domain_slug: string | null;
+}

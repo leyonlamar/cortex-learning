@@ -55,7 +55,7 @@ export function TrackerPage({ onOpenSettings }: TrackerPageProps) {
 
   // Run forecast once we have calendar data
   useEffect(() => {
-    if (!calendar) return;
+    if (!calendar || !Array.isArray(calendar.weeks)) return;
     const completedWeeks = calendar.weeks.filter((w) => {
       const completed = w.sessions.filter((s) => s.status === 'completed').length;
       return completed === w.sessions.length && w.sessions.length > 0;
